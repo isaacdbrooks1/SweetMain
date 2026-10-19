@@ -2,7 +2,8 @@
 
 import { redirect } from "next/navigation";
 import { addBusiness, type SupportLink } from "@/lib/businesses";
-import { CATEGORY_NAMES, SUPPORT_PLATFORMS, SUPPORT_ROWS } from "@/lib/categories";
+import { CATEGORY_NAMES, MAX_PHOTOS, SUPPORT_PLATFORMS, SUPPORT_ROWS } from "@/lib/categories";
+import { imageExists } from "@/lib/uploads";
 
 export type FormState = {
   errors?: Record<string, string>;
@@ -76,6 +77,14 @@ export async function createBusiness(_prev: FormState, formData: FormData): Prom
     else errors[`support${i}_url`] = "That doesn't look like a web link.";
   }
 
+  // Photos were uploaded already; only keep names that really are our uploads.
+  const photoNames = formData.getAll("photos").filter((p): p is string => typeof p === "string");
+  const photos: string[] = [];
+  for (const p of photoNames.slice(0, MAX_PHOTOS)) if (await imageExists(p)) photos.push(p);
+  values.photos = photos.join(",");
+  const logo = v("logo") && (await imageExists(v("logo"))) ? v("logo") : undefined;
+  values.logo = logo ?? "";
+
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("ownerEmail"))) {
     errors.ownerEmail = "Please enter a valid email address.";
   }
@@ -91,6 +100,8 @@ export async function createBusiness(_prev: FormState, formData: FormData): Prom
     state: onlineOnly ? "" : v("state").toUpperCase(),
     zip: onlineOnly ? "" : v("zip"),
     onlineOnly,
+    logo,
+    photos,
     links,
     supportLinks,
     investorContact: v("investorContact") === "on",

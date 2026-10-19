@@ -18,6 +18,9 @@ export type Business = {
   state: string;
   zip: string;
   onlineOnly: boolean;
+  // Uploaded file names (see lib/uploads.ts). The first photo is the cover.
+  logo?: string;
+  photos: string[];
   links: {
     website?: string;
     etsy?: string;
@@ -38,7 +41,9 @@ const FILE = path.join(process.cwd(), ".data", "businesses.json");
 
 async function readAll(): Promise<Business[]> {
   try {
-    return JSON.parse(await fs.readFile(FILE, "utf8"));
+    const list: Business[] = JSON.parse(await fs.readFile(FILE, "utf8"));
+    // Listings saved before photos existed have no photos list.
+    return list.map((b) => ({ ...b, photos: b.photos ?? [] }));
   } catch {
     return [];
   }

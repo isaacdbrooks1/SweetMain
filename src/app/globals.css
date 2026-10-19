@@ -1,41 +1,23 @@
 @import "tailwindcss";
 
-/* Site colors. Change them here and the whole site follows. */
+/* Site colors. Light only on purpose: white page, dark text, one green accent. */
 :root {
-  --bg: #faf6ef;
-  --surface: #ffffff;
-  --ink: #1f2a24;
-  --muted: #5d6b63;
-  --line: #e6dfd2;
-  --brand: #2f6b4f;
-  --brand-hover: #255a41;
+  --bg: #ffffff;
+  --subtle: #f6f6f4;
+  --ink: #1d1d1b;
+  --muted: #6b6b66;
+  --line: #e7e7e3;
+  --brand: #1f7a54;
+  --brand-hover: #18603f;
   --brand-ink: #ffffff;
-  --brand-soft: #e3efe7;
-  --accent: #c8643b;
-  --accent-soft: #f7e4d9;
-  --danger: #b3261e;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #141a17;
-    --surface: #1c2420;
-    --ink: #eef1ec;
-    --muted: #a3b0a8;
-    --line: #2f3a35;
-    --brand: #5fae86;
-    --brand-hover: #74c19a;
-    --brand-ink: #0f1512;
-    --brand-soft: #1f3329;
-    --accent: #e08a62;
-    --accent-soft: #3a2820;
-    --danger: #f2827a;
-  }
+  --brand-soft: #eaf4ee;
+  --danger: #c0352b;
+  color-scheme: light;
 }
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-surface: var(--surface);
+  --color-subtle: var(--subtle);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-line: var(--line);
@@ -43,11 +25,8 @@
   --color-brand-hover: var(--brand-hover);
   --color-brand-ink: var(--brand-ink);
   --color-brand-soft: var(--brand-soft);
-  --color-accent: var(--accent);
-  --color-accent-soft: var(--accent-soft);
   --color-danger: var(--danger);
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-figtree);
 }
 
 body {
@@ -55,21 +34,20 @@ body {
   color: var(--ink);
 }
 
-/* Shared form styles used on the Add Your Business page. */
 @layer components {
   .field {
-    @apply w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-ink placeholder:text-muted/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25;
+    @apply w-full rounded-lg border border-line bg-bg px-3 py-2.5 text-ink placeholder:text-muted/60 focus:border-ink focus:outline-none;
   }
   .label {
-    @apply mb-1.5 block text-sm font-medium;
+    @apply mb-1.5 block text-sm font-semibold;
   }
   .hint {
-    @apply mt-1 text-sm text-muted;
+    @apply mt-1.5 text-sm text-muted;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 font-semibold text-brand-ink transition hover:bg-brand-hover;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-brand px-5 py-2.5 font-semibold text-brand-ink transition-colors hover:bg-brand-hover disabled:opacity-60;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-full border border-line bg-surface px-5 py-2.5 font-medium transition hover:border-brand;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-bg px-4 py-2.5 font-semibold transition-colors hover:border-ink;
   }
 }

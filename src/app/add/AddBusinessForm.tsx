@@ -2,24 +2,16 @@
 
 import { useActionState } from "react";
 import { createBusiness, type FormState } from "./actions";
-import { CATEGORIES, SUPPORT_PLATFORMS, SUPPORT_ROWS } from "@/lib/categories";
+import { CATEGORY_NAMES, MAX_PHOTOS, SUPPORT_PLATFORMS, SUPPORT_ROWS } from "@/lib/categories";
+import PhotoUpload from "@/components/PhotoUpload";
 
-function Section({ step, title, intro, children }: {
-  step: number;
-  title: string;
-  intro?: string;
-  children: React.ReactNode;
-}) {
+// One block of the form: title and explanation on the left, fields on the right.
+function Section({ title, intro, children }: { title: string; intro?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-line bg-surface p-5 sm:p-7">
-      <div className="mb-5 flex items-start gap-3">
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-soft font-semibold text-brand">
-          {step}
-        </span>
-        <div>
-          <h2 className="font-display text-xl font-semibold">{title}</h2>
-          {intro && <p className="mt-1 text-muted">{intro}</p>}
-        </div>
+    <section className="grid gap-6 border-t border-line py-10 md:grid-cols-[260px_1fr]">
+      <div>
+        <h2 className="text-lg font-bold">{title}</h2>
+        {intro && <p className="mt-1 text-sm leading-relaxed text-muted">{intro}</p>}
       </div>
       <div className="space-y-5">{children}</div>
     </section>
@@ -27,7 +19,7 @@ function Section({ step, title, intro, children }: {
 }
 
 function ErrorText({ msg }: { msg?: string }) {
-  return msg ? <p className="mt-1 text-sm font-medium text-danger">{msg}</p> : null;
+  return msg ? <p className="mt-1.5 text-sm font-medium text-danger">{msg}</p> : null;
 }
 
 export default function AddBusinessForm() {
@@ -35,11 +27,12 @@ export default function AddBusinessForm() {
   const val = state.values ?? {};
   const err = state.errors ?? {};
   const errorCount = Object.keys(err).length;
+  const split = (s?: string) => (s ? s.split(",").filter(Boolean) : []);
 
   const text = (name: string, label: string, opts: { placeholder?: string; hint?: string; required?: boolean; type?: string } = {}) => (
     <div>
       <label htmlFor={name} className="label">
-        {label} {opts.required && <span className="text-accent">*</span>}
+        {label} {opts.required ? null : <span className="font-normal text-muted">(optional)</span>}
       </label>
       <input
         id={name}
@@ -57,124 +50,130 @@ export default function AddBusinessForm() {
 
   return (
     // The key makes the form refill with what the person typed after an error.
-    <form action={action} key={JSON.stringify(val)} className="space-y-6" noValidate>
+    <form action={action} key={JSON.stringify(val)} noValidate>
       {errorCount > 0 && (
-        <div role="alert" className="rounded-xl border border-danger/40 bg-danger/10 p-4 font-medium text-danger">
+        <div role="alert" className="mb-8 rounded-lg border border-danger/30 bg-danger/5 p-4 text-sm font-semibold text-danger">
           Please fix {errorCount === 1 ? "the item" : `the ${errorCount} items`} marked below.
         </div>
       )}
 
-      <Section step={1} title="About your business">
+      <Section title="Basics" intro="What people see first in search results.">
         {text("name", "Business name", { required: true, placeholder: "Sunny Side Bakery" })}
         <div>
-          <label htmlFor="category" className="label">
-            Category <span className="text-accent">*</span>
-          </label>
+          <label htmlFor="category" className="label">Category</label>
           <select id="category" name="category" defaultValue={val.category ?? ""} className={`field ${err.category ? "border-danger" : ""}`}>
-            <option value="" disabled>Choose one…</option>
-            {CATEGORIES.map((c) => (
-              <option key={c.name} value={c.name}>{c.icon} {c.name}</option>
-            ))}
+            <option value="" disabled>Choose a category</option>
+            {CATEGORY_NAMES.map((c) => <option key={c}>{c}</option>)}
           </select>
           <ErrorText msg={err.category} />
         </div>
-        {text("tagline", "One-line description", {
+        {text("tagline", "Short description", {
           required: true,
-          placeholder: "Fresh sourdough and pastries, baked every morning",
-          hint: "Shown on search results. Up to 120 characters.",
+          placeholder: "Sourdough and pastries, baked every morning",
+          hint: "One sentence, up to 120 characters.",
         })}
         <div>
-          <label htmlFor="description" className="label">Tell your story</label>
+          <label htmlFor="description" className="label">
+            About <span className="font-normal text-muted">(optional)</span>
+          </label>
           <textarea
             id="description"
             name="description"
-            rows={5}
+            rows={6}
             defaultValue={val.description}
-            placeholder="How you got started, what makes you special, hours, anything people should know."
+            placeholder="How you got started, what you make, your hours…"
             className={`field ${err.description ? "border-danger" : ""}`}
           />
           <ErrorText msg={err.description} />
         </div>
       </Section>
 
-      <Section step={2} title="Where can people find you?" intro="This helps people nearby discover you.">
-        <div className="grid gap-4 sm:grid-cols-[2fr_1fr_1fr]">
-          {text("city", "City", { placeholder: "Springfield" })}
-          {text("state", "State", { placeholder: "OR" })}
-          {text("zip", "ZIP code", { placeholder: "97477" })}
+      <Section title="Photos" intro="Listings with photos get far more clicks. Your first photo is the cover. JPG, PNG or WebP, up to 5 MB each.">
+        <div>
+          <p className="label">Logo <span className="font-normal text-muted">(optional)</span></p>
+          <PhotoUpload name="logo" max={1} variant="logo" initial={split(val.logo)} />
         </div>
-        <label className="flex items-center gap-3">
-          <input type="checkbox" name="onlineOnly" defaultChecked={val.onlineOnly === "on"} className="h-5 w-5 accent-brand" />
-          <span>We&apos;re online only (no physical location)</span>
+        <div>
+          <p className="label">Photos <span className="font-normal text-muted">(up to {MAX_PHOTOS})</span></p>
+          <PhotoUpload name="photos" max={MAX_PHOTOS} variant="photos" initial={split(val.photos)} />
+        </div>
+      </Section>
+
+      <Section title="Location" intro="Helps people nearby find you. We only show your city and state.">
+        <div className="grid gap-4 sm:grid-cols-[2fr_1fr_1fr]">
+          {text("city", "City", { required: true, placeholder: "Springfield" })}
+          {text("state", "State", { required: true, placeholder: "OR" })}
+          {text("zip", "ZIP", { required: true, placeholder: "97477" })}
+        </div>
+        <label className="flex items-center gap-3 text-sm">
+          <input type="checkbox" name="onlineOnly" defaultChecked={val.onlineOnly === "on"} className="h-4 w-4 accent-brand" />
+          We&apos;re online only, with no physical location
         </label>
         <ErrorText msg={err.location} />
       </Section>
 
-      <Section step={3} title="Your links" intro="All optional. Paste a full link or just your @handle.">
+      <Section title="Links" intro="Paste a full link, or just your @handle for social accounts.">
         {text("website", "Website", { placeholder: "sunnysidebakery.com" })}
-        {text("etsy", "Etsy shop", { placeholder: "etsy.com/shop/SunnySide or SunnySide" })}
+        {text("etsy", "Etsy shop", { placeholder: "Shop name or link" })}
         <div className="grid gap-4 sm:grid-cols-3">
-          {text("instagram", "Instagram", { placeholder: "@sunnysidebakes" })}
-          {text("facebook", "Facebook", { placeholder: "facebook.com/sunnyside" })}
-          {text("tiktok", "TikTok", { placeholder: "@sunnysidebakes" })}
+          {text("instagram", "Instagram", { placeholder: "@handle" })}
+          {text("facebook", "Facebook", { placeholder: "Page name or link" })}
+          {text("tiktok", "TikTok", { placeholder: "@handle" })}
         </div>
       </Section>
 
       <Section
-        step={4}
-        title="Support & invest"
-        intro="Let your community back you. Link to a crowdfunding or donation page you already run, and choose whether investors can contact you."
+        title="Support & investment"
+        intro="Already raising money on Wefunder, Kiva, GoFundMe or similar? Link it here. Local Finds never handles money or takes a cut."
       >
-        <div className="space-y-3">
-          {Array.from({ length: SUPPORT_ROWS }, (_, i) => (
-            <div key={i}>
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <select
-                  name={`support${i}_platform`}
-                  defaultValue={val[`support${i}_platform`] ?? SUPPORT_PLATFORMS[0]}
-                  aria-label={`Support link ${i + 1} platform`}
-                  className="field sm:w-44"
-                >
-                  {SUPPORT_PLATFORMS.map((p) => <option key={p}>{p}</option>)}
-                </select>
-                <input
-                  name={`support${i}_url`}
-                  defaultValue={val[`support${i}_url`]}
-                  placeholder="Link to your campaign or page"
-                  aria-label={`Support link ${i + 1}`}
-                  className={`field ${err[`support${i}_url`] ? "border-danger" : ""}`}
-                />
+        <div>
+          <p className="label">Fundraising links <span className="font-normal text-muted">(optional)</span></p>
+          <div className="space-y-2">
+            {Array.from({ length: SUPPORT_ROWS }, (_, i) => (
+              <div key={i}>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <select
+                    name={`support${i}_platform`}
+                    defaultValue={val[`support${i}_platform`] ?? SUPPORT_PLATFORMS[0]}
+                    aria-label={`Fundraising link ${i + 1} site`}
+                    className="field sm:w-40"
+                  >
+                    {SUPPORT_PLATFORMS.map((p) => <option key={p}>{p}</option>)}
+                  </select>
+                  <input
+                    name={`support${i}_url`}
+                    defaultValue={val[`support${i}_url`]}
+                    placeholder="https://"
+                    aria-label={`Fundraising link ${i + 1}`}
+                    className={`field ${err[`support${i}_url`] ? "border-danger" : ""}`}
+                  />
+                </div>
+                <ErrorText msg={err[`support${i}_url`]} />
               </div>
-              <ErrorText msg={err[`support${i}_url`]} />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        <label className="flex items-start gap-3 rounded-xl bg-accent-soft p-4">
-          <input type="checkbox" name="investorContact" defaultChecked={val.investorContact === "on"} className="mt-0.5 h-5 w-5 accent-brand" />
+        <label className="flex items-start gap-3 rounded-lg border border-line p-4">
+          <input type="checkbox" name="investorContact" defaultChecked={val.investorContact === "on"} className="mt-1 h-4 w-4 accent-brand" />
           <span>
-            <span className="font-medium">Let people contact me about investing</span>
-            <span className="mt-1 block text-sm text-muted">
-              Adds an &quot;Interested in investing?&quot; message form to your page. Messages go
-              straight to your email. Local Finds doesn&apos;t arrange or take part in any deal.
+            <span className="font-semibold">Let investors contact me</span>
+            <span className="mt-0.5 block text-sm text-muted">
+              Adds a &quot;Message the owner&quot; button for people interested in a larger
+              investment. Messages are sent to your email; your address stays hidden.
             </span>
           </span>
         </label>
       </Section>
 
-      <Section step={5} title="Your email">
-        {text("ownerEmail", "Email address", {
-          required: true,
-          type: "email",
-          placeholder: "you@example.com",
-          hint: "Private. We only use it to send you messages from your page. It's never shown publicly.",
-        })}
+      <Section title="Contact email" intro="Private. Used only to send you messages from your page.">
+        {text("ownerEmail", "Email", { required: true, type: "email", placeholder: "you@example.com" })}
       </Section>
 
-      <div className="flex flex-col items-center gap-3 pt-2">
-        <button type="submit" disabled={pending} className="btn-primary w-full text-lg sm:w-auto sm:px-10 disabled:opacity-60">
-          {pending ? "Publishing…" : "Publish my listing"}
+      <div className="flex flex-col-reverse items-start gap-4 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-end">
+        <p className="text-sm text-muted">Your listing goes live as soon as you publish.</p>
+        <button type="submit" disabled={pending} className="btn-primary px-8 py-3">
+          {pending ? "Publishing…" : "Publish listing"}
         </button>
-        <p className="text-sm text-muted">Your listing goes live right away. It&apos;s free.</p>
       </div>
     </form>
   );
