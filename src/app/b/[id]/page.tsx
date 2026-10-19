@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowUpRight, CheckCircle2, Globe, MapPin, MessageSquare, ShoppingBag } from "lucide-react";
+import BusinessMap from "@/components/BusinessMap";
+import { ArrowUpRight, CheckCircle2, ChevronRight, Globe, MapPin, MessageSquare, ShoppingBag } from "lucide-react";
 import { getBusiness } from "@/lib/businesses";
 import { imageUrl } from "@/lib/uploads";
 import { PhotoPlaceholder, placeLabel } from "@/components/BusinessCard";
@@ -49,6 +50,16 @@ export default async function BusinessPage({ params, searchParams }: Props) {
           </div>
         </div>
       )}
+
+      <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-1.5 text-sm text-muted">
+        <Link href="/search" className="hover:text-ink hover:underline">Browse</Link>
+        <ChevronRight size={14} />
+        <Link href={`/search?category=${encodeURIComponent(b.category)}`} className="hover:text-ink hover:underline">
+          {b.category}
+        </Link>
+        <ChevronRight size={14} />
+        <span className="truncate text-ink">{b.name}</span>
+      </nav>
 
       {/* Photos: one big cover with up to three smaller ones beside it. */}
       <div
@@ -110,6 +121,15 @@ export default async function BusinessPage({ params, searchParams }: Props) {
                 <MapPin size={18} className="text-muted" />
                 {[b.city, b.state, b.zip].filter(Boolean).join(", ")}
               </p>
+              {b.lat !== undefined && b.lng !== undefined && (
+                <>
+                  <BusinessMap
+                    points={[{ id: b.id, name: b.name, lat: b.lat, lng: b.lng, place: placeLabel(b) }]}
+                    className="mt-4 h-64"
+                  />
+                  <p className="mt-2 text-xs text-muted">Map shows the general area, not an exact address.</p>
+                </>
+              )}
             </section>
           )}
         </div>

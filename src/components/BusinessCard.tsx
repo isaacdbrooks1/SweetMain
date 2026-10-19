@@ -24,7 +24,11 @@ export function PhotoPlaceholder({ category }: { category: string }) {
   );
 }
 
-export default function BusinessCard({ business: b }: { business: PublicBusiness }) {
+export function distanceLabel(miles: number): string {
+  return miles < 1 ? "Under 1 mi" : `${miles < 10 ? miles.toFixed(1) : Math.round(miles)} mi`;
+}
+
+export default function BusinessCard({ business: b }: { business: PublicBusiness & { distance?: number } }) {
   const badge = supportBadge(b);
   return (
     <Link href={`/b/${b.id}`} className="group block">
@@ -54,6 +58,7 @@ export default function BusinessCard({ business: b }: { business: PublicBusiness
           <h3 className="truncate font-semibold group-hover:underline">{b.name}</h3>
           <p className="text-sm text-muted">
             {b.category} · {placeLabel(b)}
+            {b.distance !== undefined && <> · {distanceLabel(b.distance)}</>}
           </p>
           <p className="mt-0.5 line-clamp-1 text-sm text-muted">{b.tagline}</p>
         </div>

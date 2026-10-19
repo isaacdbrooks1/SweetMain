@@ -49,6 +49,7 @@ export async function createBusiness(_prev: FormState, formData: FormData): Prom
     errors.location = "Add your city and state, or ZIP code, or tick “online only”.";
   }
   if (v("zip") && !/^\d{5}(-\d{4})?$/.test(v("zip"))) errors.zip = "ZIP should look like 12345.";
+  if (v("state") && !/^[A-Za-z]{2}$/.test(v("state"))) errors.state = "Use the 2-letter code, like OR.";
 
   const linkRules: Record<string, (raw: string) => string | null> = {
     website: cleanUrl,
