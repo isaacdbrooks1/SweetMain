@@ -3,8 +3,7 @@ import Link from "next/link";
 import { MapPin, Search, X } from "lucide-react";
 import { searchBusinesses } from "@/lib/businesses";
 import { DEFAULT_RADIUS, RADIUS_OPTIONS } from "@/lib/geo";
-import BusinessCard, { placeLabel } from "@/components/BusinessCard";
-import BusinessMap from "@/components/BusinessMap";
+import BusinessCard from "@/components/BusinessCard";
 import CategoryRow from "@/components/CategoryRow";
 
 export const metadata: Metadata = { title: "Browse · Local Finds" };
@@ -31,12 +30,8 @@ export default async function SearchPage({ searchParams }: Props) {
     near && { label: place ? `Within ${radius} mi of ${place.label}` : near, href: hrefWith({ near: "", radius: "" }) },
   ].filter(Boolean) as { label: string; href: string }[];
 
-  const mapPoints = results
-    .filter((b) => b.lat !== undefined && b.lng !== undefined)
-    .map((b) => ({ id: b.id, name: b.name, lat: b.lat!, lng: b.lng!, place: placeLabel(b) }));
-
   return (
-    <main className="mx-auto max-w-7xl px-4 pt-6">
+    <main className="mx-auto max-w-6xl px-4 pt-6">
       <form action="/search" className="mb-6 flex flex-col gap-2 sm:flex-row">
         {category && <input type="hidden" name="category" value={category} />}
         <label className="flex flex-1 items-center gap-2 rounded-lg border border-line px-3 focus-within:border-ink">
@@ -79,34 +74,23 @@ export default async function SearchPage({ searchParams }: Props) {
         </p>
       )}
 
-      <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_420px]">
-        <div>
-          {results.length > 0 ? (
-            <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
-              {results.map((b) => <BusinessCard key={b.id} business={b} />)}
-            </div>
-          ) : (
-            <div className="rounded-xl border border-line px-6 py-12 text-center">
-              <p className="font-semibold">No businesses match that search yet.</p>
-              <p className="mt-1 text-muted">
-                Try a wider distance, fewer words, or{" "}
-                <Link href="/search" className="font-semibold text-ink underline">see everything</Link>.
-              </p>
-              <p className="mt-6 text-sm text-muted">
-                Know a business that should be here?{" "}
-                <Link href="/add" className="font-semibold text-ink underline">Add it</Link>
-              </p>
-            </div>
-          )}
+      {results.length > 0 ? (
+        <div className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {results.map((b) => <BusinessCard key={b.id} business={b} />)}
         </div>
-        <div className="order-first lg:order-none">
-          <BusinessMap
-            points={mapPoints}
-            center={place ?? undefined}
-            className="h-56 sm:h-72 lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)]"
-          />
+      ) : (
+        <div className="mt-6 rounded-xl border border-line px-6 py-12 text-center">
+          <p className="font-semibold">No businesses match that search yet.</p>
+          <p className="mt-1 text-muted">
+            Try a wider distance, fewer words, or{" "}
+            <Link href="/search" className="font-semibold text-ink underline">see everything</Link>.
+          </p>
+          <p className="mt-6 text-sm text-muted">
+            Know a business that should be here?{" "}
+            <Link href="/add" className="font-semibold text-ink underline">Add it</Link>
+          </p>
         </div>
-      </div>
+      )}
     </main>
   );
 }

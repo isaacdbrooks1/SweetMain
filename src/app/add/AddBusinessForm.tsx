@@ -99,7 +99,11 @@ export default function AddBusinessForm() {
         </div>
       </Section>
 
-      <Section title="Location" intro="Helps people nearby find you. We only show your city and state.">
+      <Section title="Location" intro="Helps people nearby find you. Your street address is only shown if you add one.">
+        {text("address", "Street address", {
+          placeholder: "123 Main St",
+          hint: "Only if customers can visit you, like a shop or studio. Leave blank for home-based businesses; we'll just show your town.",
+        })}
         <div className="grid gap-4 sm:grid-cols-[2fr_1fr_1fr]">
           {text("city", "City", { required: true, placeholder: "Springfield" })}
           {text("state", "State", { required: true, placeholder: "OR" })}

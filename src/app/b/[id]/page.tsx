@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import BusinessMap from "@/components/BusinessMap";
-import { ArrowUpRight, CheckCircle2, ChevronRight, Globe, MapPin, MessageSquare, ShoppingBag } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, ChevronRight, Globe, MapPin, MessageSquare, Navigation, ShoppingBag } from "lucide-react";
 import { getBusiness } from "@/lib/businesses";
 import { imageUrl } from "@/lib/uploads";
 import { PhotoPlaceholder, placeLabel } from "@/components/BusinessCard";
@@ -23,6 +22,13 @@ const LINKS: { key: "website" | "etsy" | "instagram" | "facebook" | "tiktok"; la
 // Shows the link's address without "https://www." so people can see where it goes.
 function shortUrl(url: string): string {
   return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+}
+
+// Opens Google Maps (the app on phones) searching for the business at its address,
+// which often lands on the business's own Google listing.
+function directionsUrl(b: { name: string; address?: string; city: string; state: string; zip: string }): string {
+  const query = `${b.name}, ${b.address}, ${b.city}, ${b.state} ${b.zip}`;
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -117,18 +123,27 @@ export default async function BusinessPage({ params, searchParams }: Props) {
           {!b.onlineOnly && (
             <section className="mt-8 border-t border-line pt-8">
               <h2 className="text-xl font-bold">Location</h2>
-              <p className="mt-3 flex items-center gap-2">
-                <MapPin size={18} className="text-muted" />
-                {[b.city, b.state, b.zip].filter(Boolean).join(", ")}
-              </p>
-              {b.lat !== undefined && b.lng !== undefined && (
-                <>
-                  <BusinessMap
-                    points={[{ id: b.id, name: b.name, lat: b.lat, lng: b.lng, place: placeLabel(b) }]}
-                    className="mt-4 h-64"
-                  />
-                  <p className="mt-2 text-xs text-muted">Map shows the general area, not an exact address.</p>
-                </>
+              <div className="mt-3 flex gap-3">
+                <MapPin size={20} className="mt-0.5 shrink-0 text-muted" />
+                {b.address ? (
+                  <address className="not-italic">
+                    {b.address}
+                    <br />
+                    {b.city}, {b.state} {b.zip}
+                  </address>
+                ) : (
+                  <p>
+                    {placeLabel(b)} area
+                    <span className="mt-1 block text-sm text-muted">
+                      No street address listed. Check their links for where to find them.
+                    </span>
+                  </p>
+                )}
+              </div>
+              {b.address && (
+                <a href={directionsUrl(b)} {...ext} className="btn-secondary mt-4">
+                  <Navigation size={18} /> Get directions
+                </a>
               )}
             </section>
           )}

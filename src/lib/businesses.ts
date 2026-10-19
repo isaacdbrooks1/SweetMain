@@ -18,6 +18,8 @@ export type Business = {
   city: string;
   state: string;
   zip: string;
+  // Optional street address, only for places customers can visit.
+  address?: string;
   onlineOnly: boolean;
   // Center of the ZIP or town (not the street address). Missing for online-only businesses.
   lat?: number;

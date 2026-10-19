@@ -50,6 +50,10 @@ export async function createBusiness(_prev: FormState, formData: FormData): Prom
   }
   if (v("zip") && !/^\d{5}(-\d{4})?$/.test(v("zip"))) errors.zip = "ZIP should look like 12345.";
   if (v("state") && !/^[A-Za-z]{2}$/.test(v("state"))) errors.state = "Use the 2-letter code, like OR.";
+  if (!onlineOnly && v("address")) {
+    if (v("address").length > 120) errors.address = "Keep this under 120 characters.";
+    else if (!v("city") || !v("state")) errors.location = "Please add your city and state along with the street address.";
+  }
 
   const linkRules: Record<string, (raw: string) => string | null> = {
     website: cleanUrl,
@@ -100,6 +104,7 @@ export async function createBusiness(_prev: FormState, formData: FormData): Prom
     city: onlineOnly ? "" : v("city"),
     state: onlineOnly ? "" : v("state").toUpperCase(),
     zip: onlineOnly ? "" : v("zip"),
+    address: onlineOnly ? undefined : v("address") || undefined,
     onlineOnly,
     logo,
     photos,
