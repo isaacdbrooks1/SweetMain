@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowUpRight, CheckCircle2, ChevronRight, Globe, MapPin, MessageSquare, Navigation, ShoppingBag } from "lucide-react";
 import { getBusiness } from "@/lib/businesses";
-import { imageUrl } from "@/lib/uploads";
+import { imageUrl } from "@/lib/images";
 import { PhotoPlaceholder, placeLabel } from "@/components/BusinessCard";
 
 type Props = {

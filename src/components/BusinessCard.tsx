@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { PublicBusiness } from "@/lib/businesses";
 import { categoryIcon } from "@/lib/categories";
-import { imageUrl } from "@/lib/uploads";
+import { imageUrl } from "@/lib/images";
 
 export function placeLabel(b: PublicBusiness): string {
   if (b.onlineOnly) return "Online";

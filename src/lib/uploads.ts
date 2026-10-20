@@ -1,21 +1,14 @@
-// Temporary photo storage in .data/uploads, until Supabase Storage is set up.
-import { promises as fs } from "fs";
-import path from "path";
+// Saving photos to Supabase Storage (server only).
 import { randomUUID } from "crypto";
+import { PHOTO_BUCKET, supabase } from "./supabase";
+import { FILE_NAME, imageUrl } from "./images";
 
-export const UPLOAD_DIR = path.join(process.cwd(), ".data", "uploads");
 export const MAX_BYTES = 5 * 1024 * 1024;
-// Only names we generated ourselves are ever read back.
-export const FILE_NAME = /^[a-f0-9-]{36}\.(jpg|png|webp)$/;
 
-export const CONTENT_TYPES: Record<string, string> = {
-  jpg: "image/jpeg",
-  png: "image/png",
-  webp: "image/webp",
-};
+const CONTENT_TYPES = { jpg: "image/jpeg", png: "image/png", webp: "image/webp" } as const;
 
 // Checks the file's first bytes, not just its name, so only real images are kept.
-function detectType(bytes: Uint8Array): "jpg" | "png" | "webp" | null {
+function detectType(bytes: Uint8Array): keyof typeof CONTENT_TYPES | null {
   const ascii = (from: number, to: number) => String.fromCharCode(...bytes.slice(from, to));
   if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return "jpg";
   if (bytes[0] === 0x89 && ascii(1, 4) === "PNG") return "png";
@@ -29,21 +22,15 @@ export async function saveImage(file: File): Promise<string> {
   const ext = detectType(bytes);
   if (!ext) throw new Error("Please upload a JPG, PNG or WebP photo.");
   const name = `${randomUUID()}.${ext}`;
-  await fs.mkdir(UPLOAD_DIR, { recursive: true });
-  await fs.writeFile(path.join(UPLOAD_DIR, name), bytes);
+  const { error } = await supabase.storage
+    .from(PHOTO_BUCKET)
+    .upload(name, bytes, { contentType: CONTENT_TYPES[ext], cacheControl: "31536000" });
+  if (error) throw new Error("Upload failed. Please try again.");
   return name;
 }
 
 export async function imageExists(name: string): Promise<boolean> {
   if (!FILE_NAME.test(name)) return false;
-  try {
-    await fs.access(path.join(UPLOAD_DIR, name));
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-export function imageUrl(name: string): string {
-  return `/uploads/${name}`;
+  const res = await fetch(imageUrl(name), { method: "HEAD", cache: "no-store" }).catch(() => null);
+  return !!res?.ok;
 }
