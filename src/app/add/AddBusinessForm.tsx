@@ -88,7 +88,7 @@ export default function AddBusinessForm() {
         </div>
       </Section>
 
-      <Section title="Photos" intro="Photos help neighbors recognize your shop. Your first photo is the cover. JPG, PNG or WebP, up to 5 MB each.">
+      <Section title="Photos" intro="Photos help neighbors recognize your shop. Your first photo is the cover. JPG, PNG or WebP. Big phone photos are shrunk automatically.">
         <div>
           <p className="label">Logo <span className="font-normal text-muted">(optional)</span></p>
           <PhotoUpload name="logo" max={1} variant="logo" initial={split(val.logo)} />

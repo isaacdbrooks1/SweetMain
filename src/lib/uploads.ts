@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { PHOTO_BUCKET, supabase } from "./supabase";
 import { FILE_NAME, imageUrl } from "./images";
 
-export const MAX_BYTES = 5 * 1024 * 1024;
+export const MAX_BYTES = 4 * 1024 * 1024;
 
 const CONTENT_TYPES = { jpg: "image/jpeg", png: "image/png", webp: "image/webp" } as const;
 
@@ -17,7 +17,7 @@ function detectType(bytes: Uint8Array): keyof typeof CONTENT_TYPES | null {
 }
 
 export async function saveImage(file: File): Promise<string> {
-  if (file.size > MAX_BYTES) throw new Error("Photos must be 5 MB or smaller.");
+  if (file.size > MAX_BYTES) throw new Error("That photo is too large. Try a smaller one.");
   const bytes = new Uint8Array(await file.arrayBuffer());
   const ext = detectType(bytes);
   if (!ext) throw new Error("Please upload a JPG, PNG or WebP photo.");

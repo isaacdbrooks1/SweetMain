@@ -4,7 +4,31 @@ import { useState } from "react";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { imageUrl } from "@/lib/images";
 
-const MAX_BYTES = 5 * 1024 * 1024;
+// The server (and Vercel) accept uploads up to 4 MB.
+const MAX_BYTES = 4 * 1024 * 1024;
+const MAX_SIDE = 2000;
+
+// Shrinks big photos (phone photos are often 5–10 MB) to at most 2000px on the
+// long side as a JPEG, so uploads are fast and fit the size limit. Small images
+// are sent as they are. If the browser can't read the image, the original is sent.
+async function shrink(file: File): Promise<File> {
+  if (file.size < 800 * 1024) return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = "#fff"; // JPEG has no transparency
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/jpeg", 0.85));
+    return blob ? new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" }) : file;
+  } catch {
+    return file;
+  }
+}
 
 // Uploads photos as soon as they're picked, so they survive if the form shows an error.
 // The saved file names travel with the form in hidden inputs.
@@ -23,9 +47,10 @@ export default function PhotoUpload({ name, max, initial = [], variant }: {
     e.target.value = "";
     setBusy(true);
     setError("");
-    for (const file of picked) {
+    for (const original of picked) {
+      const file = await shrink(original);
       if (file.size > MAX_BYTES) {
-        setError(`"${file.name}" is bigger than 5 MB.`);
+        setError(`"${original.name}" is too large. Try a smaller photo.`);
         continue;
       }
       const body = new FormData();
