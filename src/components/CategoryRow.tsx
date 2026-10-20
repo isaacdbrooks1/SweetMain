@@ -3,14 +3,15 @@ import { LayoutGrid } from "lucide-react";
 import { CATEGORIES } from "@/lib/categories";
 
 // Icon-and-label row of categories, starting with "All". The current one is underlined.
-export default function CategoryRow({ active = "", hrefFor }: {
+export default function CategoryRow({ active = "", hrefFor, center = false }: {
   active?: string;
   hrefFor: (category: string) => string;
+  center?: boolean;
 }) {
   const items = [{ name: "", label: "All", icon: LayoutGrid }, ...CATEGORIES.map((c) => ({ ...c, label: c.name }))];
   return (
     <nav aria-label="Categories" className="-mx-4 overflow-x-auto px-4">
-      <ul className="flex min-w-max gap-7 border-b border-line">
+      <ul className={`flex min-w-max gap-7 ${center ? "mx-auto w-max" : "border-b border-line"}`}>
         {items.map(({ name, label, icon: Icon }) => {
           const on = active === name;
           return (
