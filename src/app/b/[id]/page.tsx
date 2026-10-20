@@ -48,16 +48,16 @@ export default async function BusinessPage({ params, searchParams }: Props) {
   return (
     <main className="mx-auto max-w-6xl px-4 pt-6">
       {isNew && (
-        <div role="status" className="mb-6 flex items-start gap-3 rounded-xl border border-brand/30 bg-brand-soft p-4">
+        <div role="status" className="mb-6 flex items-start gap-3 rounded-md border border-brand/30 bg-brand-soft p-4">
           <CheckCircle2 className="mt-0.5 shrink-0 text-brand" size={20} />
           <div>
-            <p className="font-semibold">Your listing is live.</p>
-            <p className="text-sm text-muted">Share this page&apos;s link with customers so they can find and support you.</p>
+            <p className="font-bold">Your listing is live.</p>
+            <p className="text-[15px] text-muted">Share this page&apos;s link with customers so they can find and support you.</p>
           </div>
         </div>
       )}
 
-      <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-1.5 text-sm text-muted">
+      <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-1.5 text-[15px] text-muted">
         <Link href="/search" className="hover:text-ink hover:underline">Browse</Link>
         <ChevronRight size={14} />
         <Link href={`/search?category=${encodeURIComponent(b.category)}`} className="hover:text-ink hover:underline">
@@ -69,7 +69,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
 
       {/* Photos: one big cover with up to three smaller ones beside it. */}
       <div
-        className={`grid h-64 gap-2 overflow-hidden rounded-2xl sm:h-96 ${
+        className={`grid h-64 gap-2 overflow-hidden rounded-[10px] sm:h-96 ${
           rest.length > 0 ? "sm:grid-cols-[2fr_1fr]" : ""
         }`}
       >
@@ -102,12 +102,12 @@ export default async function BusinessPage({ params, searchParams }: Props) {
               <img src={imageUrl(b.logo)} alt="" className="h-16 w-16 shrink-0 rounded-full border border-line object-cover" />
             )}
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">{b.name}</h1>
+              <h1 className="text-[34px] font-extrabold leading-tight tracking-[-0.01em] sm:text-[44px]">{b.name}</h1>
               <p className="mt-1 text-muted">
-                <Link href={`/search?category=${encodeURIComponent(b.category)}`} className="hover:underline">
+                <Link href={`/search?category=${encodeURIComponent(b.category)}`} className="font-bold text-brand hover:underline">
                   {b.category}
-                </Link>{" "}
-                · {placeLabel(b)}
+                </Link>
+                {b.onlineOnly ? ", online" : ` in ${placeLabel(b)}`}
               </p>
             </div>
           </div>
@@ -134,7 +134,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
                 ) : (
                   <p>
                     {placeLabel(b)} area
-                    <span className="mt-1 block text-sm text-muted">
+                    <span className="mt-1 block text-[15px] text-muted">
                       No street address listed. Check their links for where to find them.
                     </span>
                   </p>
@@ -151,7 +151,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
 
         <aside className="space-y-4 md:sticky md:top-24 md:self-start">
           {links.length > 0 && (
-            <div className="rounded-xl border border-line p-5">
+            <div className="rounded-md border border-line p-5">
               <h2 className="font-bold">Find {b.name} online</h2>
               <ul className="mt-3 divide-y divide-line">
                 {links.map(({ key, label }) => {
@@ -162,8 +162,8 @@ export default async function BusinessPage({ params, searchParams }: Props) {
                       <a href={url} {...ext} className="group flex items-center gap-3 py-3">
                         <Icon size={18} className="shrink-0 text-muted" />
                         <span className="min-w-0">
-                          <span className="block font-semibold group-hover:underline">{label}</span>
-                          <span className="block truncate text-sm text-muted">{shortUrl(url)}</span>
+                          <span className="block font-bold group-hover:underline">{label}</span>
+                          <span className="block truncate text-[15px] text-muted">{shortUrl(url)}</span>
                         </span>
                       </a>
                     </li>
@@ -174,7 +174,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
           )}
 
           {(b.supportLinks.length > 0 || b.investorContact) && (
-            <div className="rounded-xl border border-line p-5">
+            <div className="rounded-md border border-line p-5">
               <h2 className="font-bold">Support this business</h2>
               {b.supportLinks.length > 0 && (
                 <div className="mt-3 space-y-2">
@@ -188,15 +188,15 @@ export default async function BusinessPage({ params, searchParams }: Props) {
               )}
               {b.investorContact && (
                 <div className="mt-4 border-t border-line pt-4">
-                  <p className="font-semibold">Thinking about a bigger investment?</p>
-                  <p className="mt-1 text-sm text-muted">The owner is open to hearing from investors.</p>
+                  <p className="font-bold">Thinking about a bigger investment?</p>
+                  <p className="mt-1 text-[15px] text-muted">The owner is open to hearing from investors.</p>
                   {/* Gets wired to email in the "Support & invest" phase. */}
                   <button disabled className="btn-secondary mt-3 w-full cursor-not-allowed opacity-60">
                     <MessageSquare size={18} /> Message the owner (coming soon)
                   </button>
                 </div>
               )}
-              <p className="mt-4 text-xs leading-relaxed text-muted">
+              <p className="mt-4 text-[13px] leading-relaxed text-muted">
                 Sweet Main doesn&apos;t review or take part in investments. Do your own research
                 before putting money in.
               </p>

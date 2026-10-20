@@ -11,7 +11,7 @@ function Section({ title, intro, children }: { title: string; intro?: string; ch
     <section className="grid gap-6 border-t border-line py-10 md:grid-cols-[260px_1fr]">
       <div>
         <h2 className="text-lg font-bold">{title}</h2>
-        {intro && <p className="mt-1 text-sm leading-relaxed text-muted">{intro}</p>}
+        {intro && <p className="mt-1 text-[15px] leading-relaxed text-muted">{intro}</p>}
       </div>
       <div className="space-y-5">{children}</div>
     </section>
@@ -19,7 +19,7 @@ function Section({ title, intro, children }: { title: string; intro?: string; ch
 }
 
 function ErrorText({ msg }: { msg?: string }) {
-  return msg ? <p className="mt-1.5 text-sm font-medium text-danger">{msg}</p> : null;
+  return msg ? <p className="mt-1.5 text-[15px] font-medium text-danger">{msg}</p> : null;
 }
 
 export default function AddBusinessForm() {
@@ -52,7 +52,7 @@ export default function AddBusinessForm() {
     // The key makes the form refill with what the person typed after an error.
     <form action={action} key={JSON.stringify(val)} noValidate>
       {errorCount > 0 && (
-        <div role="alert" className="mb-8 rounded-lg border border-danger/30 bg-danger/5 p-4 text-sm font-semibold text-danger">
+        <div role="alert" className="mb-8 rounded-md border border-danger/30 bg-danger/5 p-4 text-[15px] font-bold text-danger">
           Please fix {errorCount === 1 ? "the item" : `the ${errorCount} items`} marked below.
         </div>
       )}
@@ -88,7 +88,7 @@ export default function AddBusinessForm() {
         </div>
       </Section>
 
-      <Section title="Photos" intro="Listings with photos get far more clicks. Your first photo is the cover. JPG, PNG or WebP, up to 5 MB each.">
+      <Section title="Photos" intro="Photos help neighbors recognize your shop. Your first photo is the cover. JPG, PNG or WebP, up to 5 MB each.">
         <div>
           <p className="label">Logo <span className="font-normal text-muted">(optional)</span></p>
           <PhotoUpload name="logo" max={1} variant="logo" initial={split(val.logo)} />
@@ -109,7 +109,7 @@ export default function AddBusinessForm() {
           {text("state", "State", { required: true, placeholder: "OR" })}
           {text("zip", "ZIP", { required: true, placeholder: "97477" })}
         </div>
-        <label className="flex items-center gap-3 text-sm">
+        <label className="flex items-center gap-3 text-[15px]">
           <input type="checkbox" name="onlineOnly" defaultChecked={val.onlineOnly === "on"} className="h-4 w-4 accent-brand" />
           We&apos;re online only, with no physical location
         </label>
@@ -157,11 +157,11 @@ export default function AddBusinessForm() {
             ))}
           </div>
         </div>
-        <label className="flex items-start gap-3 rounded-lg border border-line p-4">
+        <label className="flex items-start gap-3 rounded-md border border-line p-4">
           <input type="checkbox" name="investorContact" defaultChecked={val.investorContact === "on"} className="mt-1 h-4 w-4 accent-brand" />
           <span>
-            <span className="font-semibold">Let investors contact me</span>
-            <span className="mt-0.5 block text-sm text-muted">
+            <span className="font-bold">Let investors contact me</span>
+            <span className="mt-0.5 block text-[15px] text-muted">
               Adds a &quot;Message the owner&quot; button for people interested in a larger
               investment. Messages are sent to your email; your address stays hidden.
             </span>
@@ -174,7 +174,7 @@ export default function AddBusinessForm() {
       </Section>
 
       <div className="flex flex-col-reverse items-start gap-4 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-end">
-        <p className="text-sm text-muted">Your listing goes live as soon as you publish.</p>
+        <p className="text-[15px] text-muted">Your listing goes live as soon as you publish.</p>
         <button type="submit" disabled={pending} className="btn-primary px-8 py-3">
           {pending ? "Publishing…" : "Publish listing"}
         </button>

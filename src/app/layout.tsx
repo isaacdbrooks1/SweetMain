@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Figtree } from "next/font/google";
+import { Overpass } from "next/font/google";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import "./globals.css";
 
-const figtree = Figtree({
-  variable: "--font-figtree",
+const overpass = Overpass({
+  variable: "--font-overpass",
   subsets: ["latin"],
 });
 
@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${figtree.variable} flex min-h-screen flex-col font-sans antialiased`}
+        className={`${overpass.variable} flex min-h-screen flex-col font-sans antialiased`}
       >
         <SiteHeader />
         <div className="flex-1">{children}</div>

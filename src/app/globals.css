@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
-/* Site colors. Light only on purpose: white page, dark text, one green accent. */
+/* Sweet Main colors (see DESIGN.md). Light only: white page, ink text,
+   street-sign green for actions, gilt for small highlights. */
 :root {
   --bg: #ffffff;
-  --subtle: #f6f6f4;
-  --ink: #1d1d1b;
-  --muted: #6b6b66;
-  --line: #e7e7e3;
-  --brand: #1f7a54;
-  --brand-hover: #18603f;
+  --subtle: #f3f4f1;
+  --ink: #1e2420;
+  --muted: #5f6b64;
+  --line: #e2e5e0;
+  --brand: #0b6b3a;
+  --brand-hover: #08552e;
   --brand-ink: #ffffff;
-  --brand-soft: #eaf4ee;
-  --danger: #c0352b;
+  --brand-soft: #e6f1ea;
+  --gilt: #f2b233;
+  --danger: #b42318;
   color-scheme: light;
 }
 
@@ -25,29 +27,43 @@
   --color-brand-hover: var(--brand-hover);
   --color-brand-ink: var(--brand-ink);
   --color-brand-soft: var(--brand-soft);
+  --color-gilt: var(--gilt);
   --color-danger: var(--danger);
-  --font-sans: var(--font-figtree);
+  --font-sans: var(--font-overpass);
 }
 
 body {
   background: var(--bg);
   color: var(--ink);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+:focus-visible {
+  outline: 3px solid var(--gilt);
+  outline-offset: 2px;
 }
 
 @layer components {
   .field {
-    @apply w-full rounded-lg border border-line bg-bg px-3 py-2.5 text-ink placeholder:text-muted/60 focus:border-ink focus:outline-none;
+    @apply w-full rounded-md border border-line bg-bg px-3 py-2.5 text-ink placeholder:text-muted/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20;
   }
   .label {
-    @apply mb-1.5 block text-sm font-semibold;
+    @apply mb-1.5 block text-[15px] font-bold;
   }
   .hint {
-    @apply mt-1.5 text-sm text-muted;
+    @apply mt-1.5 text-[15px] text-muted;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-brand px-5 py-2.5 font-semibold text-brand-ink transition-colors hover:bg-brand-hover disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-brand px-5 py-2.5 font-bold text-brand-ink transition-colors hover:bg-brand-hover disabled:opacity-60;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-bg px-4 py-2.5 font-semibold transition-colors hover:border-ink;
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-line bg-bg px-4 py-2.5 font-bold transition-colors hover:border-ink;
+  }
+  /* The logo: a green street-name sign with a white inner border. */
+  .street-sign {
+    @apply inline-block rounded-md bg-brand px-3 pb-1 pt-1.5 font-extrabold leading-none text-white;
+    outline: 2px solid #fff;
+    outline-offset: -5px;
   }
 }

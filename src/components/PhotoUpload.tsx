@@ -37,7 +37,7 @@ export default function PhotoUpload({ name, max, initial = [], variant }: {
     setBusy(false);
   }
 
-  const tile = variant === "logo" ? "h-24 w-24 rounded-full" : "aspect-[4/3] w-full rounded-lg";
+  const tile = variant === "logo" ? "h-24 w-24 rounded-full" : "aspect-[4/3] w-full rounded-md";
 
   return (
     <div>
@@ -48,7 +48,7 @@ export default function PhotoUpload({ name, max, initial = [], variant }: {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`/uploads/${f}`} alt="" className="h-full w-full object-cover" />
             {variant === "photos" && i === 0 && (
-              <span className="absolute left-2 top-2 rounded bg-bg/90 px-1.5 py-0.5 text-xs font-semibold">
+              <span className="absolute left-2 top-2 rounded bg-bg/90 px-1.5 py-0.5 text-[13px] font-bold">
                 Cover
               </span>
             )}
@@ -64,7 +64,7 @@ export default function PhotoUpload({ name, max, initial = [], variant }: {
         ))}
         {files.length < max && (
           <label
-            className={`flex cursor-pointer flex-col items-center justify-center gap-1 border-2 border-dashed border-line text-sm text-muted hover:border-ink hover:text-ink ${tile}`}
+            className={`flex cursor-pointer flex-col items-center justify-center gap-1 border-2 border-dashed border-line text-[15px] text-muted hover:border-ink hover:text-ink ${tile}`}
           >
             {busy ? <Loader2 size={22} className="animate-spin" /> : <ImagePlus size={22} />}
             <span>{busy ? "Uploading…" : variant === "logo" ? "Add logo" : "Add photos"}</span>
@@ -79,7 +79,7 @@ export default function PhotoUpload({ name, max, initial = [], variant }: {
           </label>
         )}
       </div>
-      {error && <p className="mt-2 text-sm font-medium text-danger">{error}</p>}
+      {error && <p className="mt-2 text-[15px] font-medium text-danger">{error}</p>}
     </div>
   );
 }

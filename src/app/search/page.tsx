@@ -34,15 +34,15 @@ export default async function SearchPage({ searchParams }: Props) {
     <main className="mx-auto max-w-6xl px-4 pt-6">
       <form action="/search" className="mb-6 flex flex-col gap-2 sm:flex-row">
         {category && <input type="hidden" name="category" value={category} />}
-        <label className="flex flex-1 items-center gap-2 rounded-lg border border-line px-3 focus-within:border-ink">
+        <label className="flex flex-1 items-center gap-2 rounded-md border border-line px-3 focus-within:border-ink">
           <Search size={18} className="text-muted" />
           <input name="q" defaultValue={q} placeholder="Search" aria-label="Search" className="w-full py-2.5 focus:outline-none" />
         </label>
-        <label className="flex items-center gap-2 rounded-lg border border-line px-3 focus-within:border-ink sm:w-56">
+        <label className="flex items-center gap-2 rounded-md border border-line px-3 focus-within:border-ink sm:w-56">
           <MapPin size={18} className="text-muted" />
           <input name="near" defaultValue={near} placeholder="City, ST or ZIP" aria-label="Where?" className="w-full py-2.5 focus:outline-none" />
         </label>
-        <select name="radius" defaultValue={radius} aria-label="Distance" className="rounded-lg border border-line bg-bg px-3 py-2.5 focus:border-ink focus:outline-none">
+        <select name="radius" defaultValue={radius} aria-label="Distance" className="rounded-md border border-line bg-bg px-3 py-2.5 focus:border-ink focus:outline-none">
           {RADIUS_OPTIONS.map((r) => <option key={r} value={r}>Within {r} mi</option>)}
         </select>
         <button type="submit" className="btn-primary">Search</button>
@@ -50,8 +50,8 @@ export default async function SearchPage({ searchParams }: Props) {
 
       <CategoryRow active={category} hrefFor={(c) => hrefWith({ category: c })} />
 
-      <div className="mt-6 flex flex-wrap items-center gap-2 text-sm">
-        <span className="mr-1 font-semibold">
+      <div className="mt-6 flex flex-wrap items-center gap-2 text-[15px]">
+        <span className="mr-1 font-bold">
           {results.length} {results.length === 1 ? "business" : "businesses"}
         </span>
         {filters.map((f) => (
@@ -65,11 +65,11 @@ export default async function SearchPage({ searchParams }: Props) {
           </Link>
         ))}
         {filters.length > 0 && (
-          <Link href="/search" className="ml-1 font-semibold underline">Clear filters</Link>
+          <Link href="/search" className="ml-1 font-bold underline">Clear filters</Link>
         )}
       </div>
       {placeNotFound && (
-        <p className="mt-2 text-sm text-muted">
+        <p className="mt-2 text-[15px] text-muted">
           We couldn&apos;t find &ldquo;{near}&rdquo; on the map. Try a ZIP code or &ldquo;City, ST&rdquo;.
         </p>
       )}
@@ -79,15 +79,15 @@ export default async function SearchPage({ searchParams }: Props) {
           {results.map((b) => <BusinessCard key={b.id} business={b} />)}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-line px-6 py-12 text-center">
-          <p className="font-semibold">No businesses match that search yet.</p>
+        <div className="mt-6 rounded-md border border-line px-6 py-12 text-center">
+          <p className="font-bold">No businesses match that search yet.</p>
           <p className="mt-1 text-muted">
             Try a wider distance, fewer words, or{" "}
-            <Link href="/search" className="font-semibold text-ink underline">see everything</Link>.
+            <Link href="/search" className="font-bold text-ink underline">see everything</Link>.
           </p>
-          <p className="mt-6 text-sm text-muted">
+          <p className="mt-6 text-[15px] text-muted">
             Know a business that should be here?{" "}
-            <Link href="/add" className="font-semibold text-ink underline">Add it</Link>
+            <Link href="/add" className="font-bold text-ink underline">Add it</Link>
           </p>
         </div>
       )}

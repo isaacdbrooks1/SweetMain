@@ -25,26 +25,27 @@ export function PhotoPlaceholder({ category }: { category: string }) {
 }
 
 export function distanceLabel(miles: number): string {
-  return miles < 1 ? "Under 1 mi" : `${miles < 10 ? miles.toFixed(1) : Math.round(miles)} mi`;
+  return miles < 1 ? "Under a mile away" : `${miles < 10 ? miles.toFixed(1) : Math.round(miles)} miles away`;
+}
+
+// Reads like a sentence: "Food & Drink in Springfield, OR" or "Crafts & Handmade, online".
+export function whereLabel(b: PublicBusiness): string {
+  return b.onlineOnly ? `${b.category}, online` : `${b.category} in ${placeLabel(b)}`;
 }
 
 export default function BusinessCard({ business: b }: { business: PublicBusiness & { distance?: number } }) {
   const badge = supportBadge(b);
   return (
     <Link href={`/b/${b.id}`} className="group block">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-[10px]">
         {b.photos[0] ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={imageUrl(b.photos[0])}
-            alt=""
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-          />
+          <img src={imageUrl(b.photos[0])} alt="" className="h-full w-full object-cover" />
         ) : (
           <PhotoPlaceholder category={b.category} />
         )}
         {badge && (
-          <span className="absolute left-3 top-3 rounded-md bg-bg px-2 py-1 text-xs font-semibold shadow-sm">
+          <span className="absolute left-3 top-3 rounded-md bg-gilt px-2 pb-0.5 pt-1 text-[13px] font-bold text-ink">
             {badge}
           </span>
         )}
@@ -52,15 +53,15 @@ export default function BusinessCard({ business: b }: { business: PublicBusiness
       <div className="mt-3 flex items-start gap-3">
         {b.logo && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={imageUrl(b.logo)} alt="" className="h-9 w-9 shrink-0 rounded-full border border-line object-cover" />
+          <img src={imageUrl(b.logo)} alt="" className="h-10 w-10 shrink-0 rounded-full border border-line object-cover" />
         )}
         <div className="min-w-0">
-          <h3 className="truncate font-semibold group-hover:underline">{b.name}</h3>
-          <p className="text-sm text-muted">
-            {b.category} · {placeLabel(b)}
-            {b.distance !== undefined && <> · {distanceLabel(b.distance)}</>}
-          </p>
-          <p className="mt-0.5 line-clamp-1 text-sm text-muted">{b.tagline}</p>
+          <h3 className="line-clamp-2 text-[18px] font-extrabold leading-snug group-hover:underline">{b.name}</h3>
+          <p className="text-[15px] text-muted">{whereLabel(b)}</p>
+          {b.distance !== undefined && (
+            <p className="text-[15px] font-bold text-brand">{distanceLabel(b.distance)}</p>
+          )}
+          <p className="mt-1 line-clamp-2 text-[15px] leading-snug">{b.tagline}</p>
         </div>
       </div>
     </Link>

@@ -13,7 +13,7 @@ export default function HeaderSearch() {
         name="q"
         placeholder="Search local businesses"
         aria-label="Search local businesses"
-        className="w-full rounded-lg border border-line bg-subtle py-2 pl-10 pr-3 text-sm focus:border-ink focus:bg-bg focus:outline-none"
+        className="w-full rounded-md border border-line bg-subtle py-2 pl-10 pr-3 text-[15px] focus:border-ink focus:bg-bg focus:outline-none"
       />
     </form>
   );

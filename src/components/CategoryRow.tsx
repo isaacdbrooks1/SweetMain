@@ -18,8 +18,8 @@ export default function CategoryRow({ active = "", hrefFor }: {
               <Link
                 href={hrefFor(name)}
                 aria-current={on ? "page" : undefined}
-                className={`flex flex-col items-center gap-1.5 border-b-2 pb-3 pt-1 text-xs font-semibold transition-colors ${
-                  on ? "border-ink text-ink" : "border-transparent text-muted hover:border-line hover:text-ink"
+                className={`flex flex-col items-center gap-1.5 border-b-2 pb-3 pt-1 text-[14px] font-bold transition-colors ${
+                  on ? "border-brand text-brand" : "border-transparent text-muted hover:border-line hover:text-ink"
                 }`}
               >
                 <Icon size={24} strokeWidth={1.5} />
