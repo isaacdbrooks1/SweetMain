@@ -4,7 +4,7 @@ import HeaderSearch from "./HeaderSearch";
 export function Wordmark() {
   return (
     <span className="text-xl font-extrabold tracking-tight">
-      local<span className="text-brand">finds</span>
+      sweet<span className="text-brand">main</span>
     </span>
   );
 }
@@ -13,7 +13,7 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-bg">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4">
-        <Link href="/" aria-label="Local Finds home">
+        <Link href="/" aria-label="Sweet Main home">
           <Wordmark />
         </Link>
         <HeaderSearch />

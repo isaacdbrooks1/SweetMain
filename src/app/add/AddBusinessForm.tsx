@@ -128,7 +128,7 @@ export default function AddBusinessForm() {
 
       <Section
         title="Support & investment"
-        intro="Already raising money on Wefunder, Kiva, GoFundMe or similar? Link it here. Local Finds never handles money or takes a cut."
+        intro="Already raising money on Wefunder, Kiva, GoFundMe or similar? Link it here. Sweet Main never handles money or takes a cut."
       >
         <div>
           <p className="label">Fundraising links <span className="font-normal text-muted">(optional)</span></p>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import AddBusinessForm from "./AddBusinessForm";
 
-export const metadata: Metadata = { title: "List your business · Local Finds" };
+export const metadata: Metadata = { title: "List your business · Sweet Main" };
 
 export default function AddPage() {
   return (

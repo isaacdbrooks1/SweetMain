@@ -33,7 +33,7 @@ function directionsUrl(b: { name: string; address?: string; city: string; state:
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const b = await getBusiness((await params).id);
-  return { title: b ? `${b.name} · Local Finds` : "Not found · Local Finds", description: b?.tagline };
+  return { title: b ? `${b.name} · Sweet Main` : "Not found · Sweet Main", description: b?.tagline };
 }
 
 export default async function BusinessPage({ params, searchParams }: Props) {
@@ -197,7 +197,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
                 </div>
               )}
               <p className="mt-4 text-xs leading-relaxed text-muted">
-                Local Finds doesn&apos;t review or take part in investments. Do your own research
+                Sweet Main doesn&apos;t review or take part in investments. Do your own research
                 before putting money in.
               </p>
             </div>

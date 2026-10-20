@@ -27,7 +27,7 @@ export default function SiteFooter() {
         </div>
       </div>
       <div className="mx-auto max-w-6xl border-t border-line px-4 py-6 text-xs leading-relaxed text-muted">
-        Local Finds does not review, recommend or take part in any investment. Links to
+        Sweet Main does not review, recommend or take part in any investment. Links to
         crowdfunding sites and messages to owners are between you and the business.
       </div>
     </footer>

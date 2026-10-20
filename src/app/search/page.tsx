@@ -6,7 +6,7 @@ import { DEFAULT_RADIUS, RADIUS_OPTIONS } from "@/lib/geo";
 import BusinessCard from "@/components/BusinessCard";
 import CategoryRow from "@/components/CategoryRow";
 
-export const metadata: Metadata = { title: "Browse · Local Finds" };
+export const metadata: Metadata = { title: "Browse · Sweet Main" };
 
 type Props = { searchParams: Promise<{ q?: string; near?: string; category?: string; radius?: string }> };
 

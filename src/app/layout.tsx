@@ -10,7 +10,7 @@ const figtree = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: "Local Finds",
+  title: "Sweet Main",
   description: "Find and support small businesses near you.",
 };
 
