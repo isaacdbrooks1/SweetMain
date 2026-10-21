@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowUpRight, CheckCircle2, ChevronRight, Globe, MapPin, MessageSquare, Navigation, ShoppingBag } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, ChevronRight, Flag, Globe, MapPin, MessageSquare, Navigation, ShoppingBag } from "lucide-react";
 import { getBusiness } from "@/lib/businesses";
 import { imageUrl } from "@/lib/images";
 import { PhotoPlaceholder, placeLabel } from "@/components/BusinessCard";
@@ -204,6 +204,12 @@ export default async function BusinessPage({ params, searchParams }: Props) {
           )}
         </aside>
       </div>
+
+      <p className="mt-12 border-t border-line pt-6">
+        <Link href={`/b/${b.id}/report`} className="inline-flex items-center gap-2 text-[15px] text-muted hover:text-ink hover:underline">
+          <Flag size={16} /> Report this listing
+        </Link>
+      </p>
     </main>
   );
 }
