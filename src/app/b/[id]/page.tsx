@@ -1,22 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowUpRight, CheckCircle2, ChevronRight, Flag, Globe, MapPin, MessageSquare, Navigation, ShoppingBag } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, ChevronRight, Flag, Globe, MapPin, MessageSquare, Navigation, ShoppingBag, Star } from "lucide-react";
 import { getBusiness } from "@/lib/businesses";
 import { imageUrl } from "@/lib/images";
 import { PhotoPlaceholder, placeLabel } from "@/components/BusinessCard";
+import ShareButtons from "@/components/ShareButtons";
 
 type Props = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ new?: string }>;
 };
 
-const LINKS: { key: "website" | "etsy" | "instagram" | "facebook" | "tiktok"; label: string }[] = [
+const LINKS: { key: "website" | "etsy" | "instagram" | "facebook" | "tiktok" | "google"; label: string }[] = [
   { key: "website", label: "Website" },
   { key: "etsy", label: "Etsy shop" },
   { key: "instagram", label: "Instagram" },
   { key: "facebook", label: "Facebook" },
   { key: "tiktok", label: "TikTok" },
+  { key: "google", label: "Reviews on Google" },
 ];
 
 // Shows the link's address without "https://www." so people can see where it goes.
@@ -112,6 +114,9 @@ export default async function BusinessPage({ params, searchParams }: Props) {
             </div>
           </div>
           <p className="mt-6 text-lg">{b.tagline}</p>
+          <div className="mt-5">
+            <ShareButtons name={b.name} />
+          </div>
 
           <section className="mt-8 border-t border-line pt-8">
             <h2 className="text-xl font-bold">About</h2>
@@ -156,7 +161,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
               <ul className="mt-3 divide-y divide-line">
                 {links.map(({ key, label }) => {
                   const url = b.links[key]!;
-                  const Icon = key === "website" ? Globe : key === "etsy" ? ShoppingBag : ArrowUpRight;
+                  const Icon = key === "website" ? Globe : key === "etsy" ? ShoppingBag : key === "google" ? Star : ArrowUpRight;
                   return (
                     <li key={key}>
                       <a href={url} {...ext} className="group flex items-center gap-3 py-3">

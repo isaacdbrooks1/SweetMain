@@ -31,6 +31,7 @@ export type Business = {
     instagram?: string;
     facebook?: string;
     tiktok?: string;
+    google?: string; // link to the business's Google reviews
   };
   supportLinks: SupportLink[];
   investorContact: boolean;

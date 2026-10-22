@@ -85,6 +85,7 @@ export default async function Home() {
           Give it a free page with your photos, your story and links to your website, socials and
           Etsy shop.
         </p>
+        <p className="mt-3 font-bold text-brand">Free for good. No ads, no sales calls.</p>
         <Link href="/add" className="btn-primary mt-6 px-6 py-3">
           List your business
         </Link>

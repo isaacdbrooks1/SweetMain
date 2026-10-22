@@ -30,6 +30,15 @@ function socialUrl(raw: string, fromHandle: (h: string) => string): string | nul
   return /^[\w.-]{1,60}$/.test(handle) ? fromHandle(handle) : null;
 }
 
+// Only accepts links that go to Google (a Maps/Search listing or a g.page review link).
+function googleUrl(raw: string): string | null {
+  const url = cleanUrl(raw);
+  if (!url) return null;
+  const host = new URL(url).hostname.toLowerCase();
+  const ok = /(^|\.)google\.[a-z.]+$/.test(host) || host === "g.page" || host === "maps.app.goo.gl" || host === "g.co";
+  return ok ? url : null;
+}
+
 export async function createBusiness(_prev: FormState, formData: FormData): Promise<FormState> {
   const values: Record<string, string> = {};
   for (const [key, value] of formData.entries()) {
@@ -61,13 +70,18 @@ export async function createBusiness(_prev: FormState, formData: FormData): Prom
     instagram: (r) => socialUrl(r, (h) => `https://www.instagram.com/${h}`),
     facebook: (r) => socialUrl(r, (h) => `https://www.facebook.com/${h}`),
     tiktok: (r) => socialUrl(r, (h) => `https://www.tiktok.com/@${h}`),
+    google: googleUrl,
   };
   const links: Record<string, string> = {};
   for (const [key, rule] of Object.entries(linkRules)) {
     if (!v(key)) continue;
     const url = rule(v(key));
     if (url) links[key] = url;
-    else errors[key] = "That doesn't look like a link or handle.";
+    else
+      errors[key] =
+        key === "google"
+          ? "Please paste the review link from your Google Business Profile."
+          : "That doesn't look like a link or handle.";
   }
 
   const supportLinks: SupportLink[] = [];

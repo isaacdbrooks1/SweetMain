@@ -9,8 +9,8 @@ export default function AddPage() {
       <header className="pb-8">
         <h1 className="text-[34px] font-extrabold leading-tight tracking-[-0.01em] sm:text-[44px]">List your business</h1>
         <p className="mt-2 max-w-xl text-muted">
-          Free for independent businesses. Only the basics are required; add as much else as
-          you like.
+          Free for independent businesses, for good: no ads, no sales calls. Only the basics are
+          required; add as much else as you like.
         </p>
       </header>
       <AddBusinessForm />

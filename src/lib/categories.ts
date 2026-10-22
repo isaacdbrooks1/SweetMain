@@ -29,6 +29,7 @@ export function categoryIcon(name: string): LucideIcon {
 
 // Where a business can raise money or take donations. Shown as a dropdown on the form.
 export const SUPPORT_PLATFORMS = [
+  "Honeycomb Credit",
   "Wefunder",
   "StartEngine",
   "Kiva",

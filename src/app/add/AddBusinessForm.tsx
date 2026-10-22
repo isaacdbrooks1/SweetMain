@@ -124,6 +124,10 @@ export default function AddBusinessForm() {
           {text("facebook", "Facebook", { placeholder: "Page name or link" })}
           {text("tiktok", "TikTok", { placeholder: "@handle" })}
         </div>
+        {text("google", "Google reviews link", {
+          placeholder: "https://g.page/r/…",
+          hint: "Lets customers leave you a Google review. Find it in your Google Business Profile under \"Ask for reviews.\"",
+        })}
       </Section>
 
       <Section
