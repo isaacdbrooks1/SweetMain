@@ -32,11 +32,12 @@ async function shrink(file: File): Promise<File> {
 
 // Uploads photos as soon as they're picked, so they survive if the form shows an error.
 // The saved file names travel with the form in hidden inputs.
-export default function PhotoUpload({ name, max, initial = [], variant }: {
+export default function PhotoUpload({ name, max, initial = [], variant, addLabel }: {
   name: string;
   max: number;
   initial?: string[];
   variant: "logo" | "photos";
+  addLabel?: string;
 }) {
   const [files, setFiles] = useState<string[]>(initial);
   const [busy, setBusy] = useState(false);
@@ -93,7 +94,7 @@ export default function PhotoUpload({ name, max, initial = [], variant }: {
             className={`flex cursor-pointer flex-col items-center justify-center gap-1 border-2 border-dashed border-line text-[15px] text-muted hover:border-ink hover:text-ink ${tile}`}
           >
             {busy ? <Loader2 size={22} className="animate-spin" /> : <ImagePlus size={22} />}
-            <span>{busy ? "Uploading…" : variant === "logo" ? "Add logo" : "Add photos"}</span>
+            <span>{busy ? "Uploading…" : addLabel ?? (variant === "logo" ? "Add logo" : "Add photos")}</span>
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"

@@ -103,6 +103,10 @@ export async function createBusiness(_prev: FormState, formData: FormData): Prom
   values.photos = photos.join(",");
   const logo = v("logo") && (await imageExists(v("logo"))) ? v("logo") : undefined;
   values.logo = logo ?? "";
+  const ownerPhoto = v("ownerPhoto") && (await imageExists(v("ownerPhoto"))) ? v("ownerPhoto") : undefined;
+  values.ownerPhoto = ownerPhoto ?? "";
+  if (v("ownerName").length > 60) errors.ownerName = "Keep this under 60 characters.";
+  if (v("ownerStory").length > 600) errors.ownerStory = "Keep this under 600 characters.";
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("ownerEmail"))) {
     errors.ownerEmail = "Please enter a valid email address.";
@@ -125,6 +129,9 @@ export async function createBusiness(_prev: FormState, formData: FormData): Prom
     links,
     supportLinks,
     investorContact: v("investorContact") === "on",
+    ownerName: v("ownerName") || undefined,
+    ownerStory: v("ownerStory"),
+    ownerPhoto,
     ownerEmail: v("ownerEmail"),
   });
   redirect(`/b/${id}?new=1`);

@@ -35,6 +35,10 @@ export type Business = {
   };
   supportLinks: SupportLink[];
   investorContact: boolean;
+  // Meet the owner (all optional). ownerPhoto is a photo file name like logo.
+  ownerName?: string;
+  ownerStory: string;
+  ownerPhoto?: string;
   // Private: used to forward messages to the owner. Never shown on the site.
   ownerEmail: string;
 };
@@ -45,7 +49,7 @@ export type SearchResult = PublicBusiness & { distance?: number };
 
 // Every column except owner_email. Public pages only ever select these.
 const PUBLIC_COLUMNS =
-  "id, created_at, name, category, tagline, description, city, state, zip, address, online_only, lat, lng, logo, photos, links, support_links, investor_contact";
+  "id, created_at, name, category, tagline, description, city, state, zip, address, online_only, lat, lng, logo, photos, links, support_links, investor_contact, owner_name, owner_story, owner_photo";
 
 type Row = {
   id: string;
@@ -66,6 +70,9 @@ type Row = {
   links: Business["links"];
   support_links: SupportLink[];
   investor_contact: boolean;
+  owner_name: string | null;
+  owner_story: string | null;
+  owner_photo: string | null;
 };
 
 function fromRow(r: Row): PublicBusiness {
@@ -88,6 +95,9 @@ function fromRow(r: Row): PublicBusiness {
     links: r.links ?? {},
     supportLinks: r.support_links ?? [],
     investorContact: r.investor_contact,
+    ownerName: r.owner_name ?? undefined,
+    ownerStory: r.owner_story ?? "",
+    ownerPhoto: r.owner_photo ?? undefined,
   };
 }
 
@@ -128,6 +138,9 @@ export async function addBusiness(input: NewBusiness): Promise<string> {
     links: input.links,
     support_links: input.supportLinks,
     investor_contact: input.investorContact,
+    owner_name: input.ownerName ?? null,
+    owner_story: input.ownerStory,
+    owner_photo: input.ownerPhoto ?? null,
     owner_email: input.ownerEmail,
   });
   if (error) throw new Error(`Couldn't save the listing: ${error.message}`);

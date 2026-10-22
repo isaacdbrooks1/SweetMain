@@ -16,6 +16,7 @@ export default function SiteFooter() {
           <p className="font-bold">Find</p>
           <ul className="mt-3 space-y-2 text-white/85">
             <li><Link href="/search" className="hover:text-white hover:underline">All businesses</Link></li>
+            <li><Link href="/towns" className="hover:text-white hover:underline">Towns</Link></li>
             <li><Link href="/search?category=Crafts+%26+Handmade" className="hover:text-white hover:underline">Handmade</Link></li>
             <li><Link href="/search?category=Food+%26+Drink" className="hover:text-white hover:underline">Food and drink</Link></li>
           </ul>

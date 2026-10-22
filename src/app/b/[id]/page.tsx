@@ -6,6 +6,7 @@ import { getBusiness } from "@/lib/businesses";
 import { imageUrl } from "@/lib/images";
 import { PhotoPlaceholder, placeLabel } from "@/components/BusinessCard";
 import ShareButtons from "@/components/ShareButtons";
+import { hasTown, townSlug } from "@/lib/towns";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -109,7 +110,14 @@ export default async function BusinessPage({ params, searchParams }: Props) {
                 <Link href={`/search?category=${encodeURIComponent(b.category)}`} className="font-bold text-brand hover:underline">
                   {b.category}
                 </Link>
-                {b.onlineOnly ? ", online" : ` in ${placeLabel(b)}`}
+                {hasTown(b) ? (
+                  <>
+                    {" in "}
+                    <Link href={`/town/${townSlug(b.city, b.state)}`} className="hover:text-ink hover:underline">
+                      {placeLabel(b)}
+                    </Link>
+                  </>
+                ) : b.onlineOnly ? ", online" : ` in ${placeLabel(b)}`}
               </p>
             </div>
           </div>
@@ -118,12 +126,25 @@ export default async function BusinessPage({ params, searchParams }: Props) {
             <ShareButtons name={b.name} />
           </div>
 
-          <section className="mt-8 border-t border-line pt-8">
-            <h2 className="text-xl font-bold">About</h2>
-            <p className="mt-3 whitespace-pre-line leading-relaxed text-ink/90">
-              {b.description || "This business hasn't added a longer description yet."}
-            </p>
-          </section>
+          {(b.ownerName || b.ownerStory || b.ownerPhoto) && (
+            <section className="mt-8 flex gap-4 border-t border-line pt-8">
+              {b.ownerPhoto && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={imageUrl(b.ownerPhoto)} alt="" className="h-16 w-16 shrink-0 rounded-full border border-line object-cover" />
+              )}
+              <div>
+                <h2 className="text-xl font-bold">{b.ownerName ? `Meet ${b.ownerName}` : "Meet the owner"}</h2>
+                {b.ownerStory && <p className="mt-2 whitespace-pre-line leading-relaxed text-ink/90">{b.ownerStory}</p>}
+              </div>
+            </section>
+          )}
+
+          {b.description && (
+            <section className="mt-8 border-t border-line pt-8">
+              <h2 className="text-xl font-bold">About</h2>
+              <p className="mt-3 whitespace-pre-line leading-relaxed text-ink/90">{b.description}</p>
+            </section>
+          )}
 
           {!b.onlineOnly && (
             <section className="mt-8 border-t border-line pt-8">

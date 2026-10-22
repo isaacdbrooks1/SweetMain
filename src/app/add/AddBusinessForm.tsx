@@ -99,6 +99,29 @@ export default function AddBusinessForm() {
         </div>
       </Section>
 
+      <Section title="Meet the owner" intro="Optional, but neighbors love knowing who's behind a shop. Shown near the top of your page.">
+        <div>
+          <p className="label">Your photo <span className="font-normal text-muted">(optional)</span></p>
+          <PhotoUpload name="ownerPhoto" max={1} variant="logo" addLabel="Add photo" initial={split(val.ownerPhoto)} />
+        </div>
+        {text("ownerName", "Your name", { placeholder: "Maria Lopez" })}
+        <div>
+          <label htmlFor="ownerStory" className="label">
+            A few words about you <span className="font-normal text-muted">(optional)</span>
+          </label>
+          <textarea
+            id="ownerStory"
+            name="ownerStory"
+            rows={3}
+            maxLength={600}
+            defaultValue={val.ownerStory}
+            placeholder="I started baking with my grandmother and opened the shop in 2019…"
+            className={`field ${err.ownerStory ? "border-danger" : ""}`}
+          />
+          <ErrorText msg={err.ownerStory} />
+        </div>
+      </Section>
+
       <Section title="Location" intro="Helps people nearby find you. Your street address is only shown if you add one.">
         {text("address", "Street address", {
           placeholder: "123 Main St",

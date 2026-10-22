@@ -33,7 +33,6 @@ export default function ShareButtons({ name }: { name: string }) {
   const btn = "btn-secondary px-3 py-2 text-[15px]";
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="mr-1 text-[15px] font-bold">Share</span>
       {canShare && (
         <button type="button" onClick={nativeShare} className={btn}>
           <Share2 size={16} /> Share
@@ -46,7 +45,7 @@ export default function ShareButtons({ name }: { name: string }) {
         }
         className={btn}
       >
-        Facebook
+        Share on Facebook
       </button>
       <button type="button" onClick={copy} className={btn} aria-live="polite">
         {copied ? <Check size={16} /> : <Link2 size={16} />} {copied ? "Link copied" : "Copy link"}
