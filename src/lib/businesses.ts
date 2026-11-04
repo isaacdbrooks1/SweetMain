@@ -32,6 +32,7 @@ export type Business = {
     facebook?: string;
     tiktok?: string;
     google?: string; // link to the business's Google reviews
+    more?: string[]; // other links (YouTube, Pinterest, X…)
   };
   supportLinks: SupportLink[];
   investorContact: boolean;
@@ -227,7 +228,8 @@ export async function getListingForEdit(id: string): Promise<Record<string, stri
     ownerPhoto: b.ownerPhoto ?? "",
     ownerEmail: (data as { owner_email: string }).owner_email,
   };
-  for (const [k, url] of Object.entries(b.links)) if (url) values[k] = url;
+  for (const [k, url] of Object.entries(b.links)) if (typeof url === "string" && url) values[k] = url;
+  (b.links.more ?? []).forEach((url, i) => (values[`more${i}`] = url));
   b.supportLinks.forEach((s, i) => {
     values[`support${i}_platform`] = s.platform;
     values[`support${i}_url`] = s.url;

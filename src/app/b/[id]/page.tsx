@@ -24,6 +24,24 @@ const LINKS: { key: "website" | "etsy" | "instagram" | "facebook" | "tiktok" | "
   { key: "google", label: "Reviews on Google" },
 ];
 
+// Names a link by its site, e.g. "YouTube"; unknown sites show their address.
+const SITE_NAMES: [RegExp, string][] = [
+  [/(^|\.)(youtube\.com|youtu\.be)$/, "YouTube"],
+  [/(^|\.)pinterest\.[a-z.]+$/, "Pinterest"],
+  [/(^|\.)(x\.com|twitter\.com)$/, "X"],
+  [/(^|\.)linkedin\.com$/, "LinkedIn"],
+  [/(^|\.)threads\.(net|com)$/, "Threads"],
+  [/(^|\.)bsky\.app$/, "Bluesky"],
+  [/(^|\.)snapchat\.com$/, "Snapchat"],
+  [/(^|\.)linktr\.ee$/, "Linktree"],
+  [/(^|\.)spotify\.com$/, "Spotify"],
+  [/(^|\.)yelp\.com$/, "Yelp"],
+];
+function linkName(url: string): string {
+  const host = new URL(url).hostname.replace(/^www\./, "");
+  return SITE_NAMES.find(([re]) => re.test(host))?.[1] ?? host;
+}
+
 // Shows the link's address without "https://www." so people can see where it goes.
 function shortUrl(url: string): string {
   return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
@@ -46,7 +64,15 @@ export default async function BusinessPage({ params, searchParams }: Props) {
   const b = await getBusiness(id);
   if (!b) notFound();
 
-  const links = LINKS.filter((l) => b.links[l.key]);
+  const links = [
+    ...LINKS.filter((l) => b.links[l.key]).map(({ key, label }) => ({
+      key,
+      label,
+      url: b.links[key]!,
+      Icon: key === "website" ? Globe : key === "etsy" ? ShoppingBag : key === "google" ? Star : ArrowUpRight,
+    })),
+    ...(b.links.more ?? []).map((url, i) => ({ key: `more${i}`, label: linkName(url), url, Icon: ArrowUpRight })),
+  ];
   const [cover, ...rest] = b.photos;
   const ext = { target: "_blank", rel: "noopener noreferrer nofollow" } as const;
 
@@ -192,9 +218,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
             <div className="rounded-md border border-line p-5">
               <h2 className="font-bold">Find {b.name} online</h2>
               <ul className="mt-3 divide-y divide-line">
-                {links.map(({ key, label }) => {
-                  const url = b.links[key]!;
-                  const Icon = key === "website" ? Globe : key === "etsy" ? ShoppingBag : key === "google" ? Star : ArrowUpRight;
+                {links.map(({ key, label, url, Icon }) => {
                   return (
                     <li key={key}>
                       <a href={url} {...ext} className="group flex items-center gap-3 py-3">

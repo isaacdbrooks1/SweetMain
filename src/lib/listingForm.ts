@@ -85,6 +85,15 @@ export async function parseListing(
           : "That doesn't look like a link or handle.";
   }
 
+  // Up to 3 extra links of any kind (YouTube, Pinterest, X…).
+  const more: string[] = [];
+  for (let i = 0; i < 3; i++) {
+    if (!v(`more${i}`)) continue;
+    const url = cleanUrl(v(`more${i}`));
+    if (url) more.push(url);
+    else errors[`more${i}`] = "That doesn't look like a web link.";
+  }
+
   const supportLinks: SupportLink[] = [];
   for (let i = 0; i < SUPPORT_ROWS; i++) {
     const raw = v(`support${i}_url`);
@@ -127,7 +136,7 @@ export async function parseListing(
     onlineOnly,
     logo,
     photos,
-    links,
+    links: more.length ? { ...links, more } : links,
     supportLinks,
     investorContact: v("investorContact") === "on",
     ownerName: v("ownerName") || undefined,

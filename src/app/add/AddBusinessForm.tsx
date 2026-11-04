@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import { Plus } from "lucide-react";
 import { createBusiness } from "./actions";
 import type { FormState } from "@/lib/listingForm";
 import { CATEGORY_NAMES, MAX_PHOTOS, SUPPORT_PLATFORMS, SUPPORT_ROWS } from "@/lib/categories";
@@ -16,6 +17,89 @@ function Section({ title, intro, children }: { title: string; intro?: string; ch
       </div>
       <div className="space-y-5">{children}</div>
     </section>
+  );
+}
+
+type TextField = (
+  name: string,
+  label: string,
+  opts?: { placeholder?: string; hint?: string; required?: boolean; type?: string },
+) => React.ReactNode;
+
+// Ticking "online only" hides the address boxes, since there's nowhere to visit.
+function LocationFields({ val, err, text }: { val: Record<string, string>; err: Record<string, string>; text: TextField }) {
+  const [online, setOnline] = useState(val.onlineOnly === "on");
+  return (
+    <>
+      <label className="flex items-center gap-3 text-[15px]">
+        <input
+          type="checkbox"
+          name="onlineOnly"
+          checked={online}
+          onChange={(e) => setOnline(e.target.checked)}
+          className="h-4 w-4 accent-brand"
+        />
+        We&apos;re online only, with no physical location
+      </label>
+      {!online && (
+        <>
+          {text("address", "Street address", {
+            placeholder: "123 Main St",
+            hint: "Only if customers can visit you, like a shop or studio. Leave it blank for home-based businesses; we'll just show your town.",
+          })}
+          <div className="grid gap-4 sm:grid-cols-[2fr_1fr_1fr]">
+            {text("city", "City", { placeholder: "Springfield" })}
+            {text("state", "State", { placeholder: "OR" })}
+            {text("zip", "ZIP", { placeholder: "97477" })}
+          </div>
+        </>
+      )}
+      <ErrorText msg={err.location} />
+    </>
+  );
+}
+
+// Up to 3 extra links (YouTube, Pinterest, X…), shown one at a time as needed.
+const MORE_LINKS = 3;
+function MoreLinks({ val, err }: { val: Record<string, string>; err: Record<string, string> }) {
+  const [count, setCount] = useState(() => Array.from({ length: MORE_LINKS }, (_, i) => val[`more${i}`]).filter(Boolean).length);
+  return (
+    <div>
+      {count > 0 && <p className="label">Other links</p>}
+      <div className="space-y-2">
+        {Array.from({ length: count }, (_, i) => (
+          <div key={i}>
+            <input
+              name={`more${i}`}
+              defaultValue={val[`more${i}`]}
+              placeholder="YouTube, Pinterest, X, LinkedIn, Linktree…"
+              aria-label={`Other link ${i + 1}`}
+              className={`field ${err[`more${i}`] ? "border-danger" : ""}`}
+            />
+            <ErrorText msg={err[`more${i}`]} />
+          </div>
+        ))}
+      </div>
+      {count < MORE_LINKS && (
+        <button
+          type="button"
+          onClick={() => setCount(count + 1)}
+          className="mt-2 inline-flex items-center gap-1.5 text-[15px] font-bold text-brand hover:underline"
+        >
+          <Plus size={16} /> Add another link
+        </button>
+      )}
+    </div>
+  );
+}
+
+// A small red star for required fields (read out as "required").
+function Req() {
+  return (
+    <span className="ml-0.5 text-danger">
+      <span aria-hidden>*</span>
+      <span className="sr-only"> (required)</span>
+    </span>
   );
 }
 
@@ -40,7 +124,7 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
   const text = (name: string, label: string, opts: { placeholder?: string; hint?: string; required?: boolean; type?: string } = {}) => (
     <div>
       <label htmlFor={name} className="label">
-        {label} {opts.required ? null : <span className="font-normal text-muted">(optional)</span>}
+        {label}{opts.required && <Req />}
       </label>
       <input
         id={name}
@@ -60,6 +144,9 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
     // The key makes the form refill with what the person typed after an error.
     <form action={action} key={JSON.stringify(val)} noValidate>
       {Object.entries(hidden).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
+      <p className="mb-6 text-[15px] text-muted">
+        Fields marked <span className="font-bold text-danger">*</span> are required. Everything else is optional.
+      </p>
       {errorCount > 0 && (
         <div role="alert" className="mb-8 rounded-md border border-danger/30 bg-danger/5 p-4 text-[15px] font-bold text-danger">
           {err.form ?? (errorCount === 1 ? "Please fix the item marked below." : `Please fix the ${errorCount} items marked below.`)}
@@ -69,7 +156,7 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
       <Section title="Basics" intro="What people see first in search results.">
         {text("name", "Business name", { required: true, placeholder: "Sunny Side Bakery" })}
         <div>
-          <label htmlFor="category" className="label">Category</label>
+          <label htmlFor="category" className="label">Category<Req /></label>
           <select id="category" name="category" defaultValue={val.category ?? ""} className={`field ${err.category ? "border-danger" : ""}`}>
             <option value="" disabled>Choose a category</option>
             {CATEGORY_NAMES.map((c) => <option key={c}>{c}</option>)}
@@ -83,7 +170,7 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
         })}
         <div>
           <label htmlFor="description" className="label">
-            About <span className="font-normal text-muted">(optional)</span>
+            About
           </label>
           <textarea
             id="description"
@@ -99,7 +186,7 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
 
       <Section title="Photos" intro="Photos help neighbors recognize your shop. Your first photo is the cover. JPG, PNG or WebP. Big phone photos are shrunk automatically.">
         <div>
-          <p className="label">Logo <span className="font-normal text-muted">(optional)</span></p>
+          <p className="label">Logo</p>
           <PhotoUpload name="logo" max={1} variant="logo" initial={split(val.logo)} />
         </div>
         <div>
@@ -108,15 +195,15 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
         </div>
       </Section>
 
-      <Section title="Meet the owner" intro="Optional, but neighbors love knowing who's behind a shop. Shown near the top of your page.">
+      <Section title="Meet the owner" intro="Neighbors love knowing who's behind a shop. Shown near the top of your page.">
         <div>
-          <p className="label">Your photo <span className="font-normal text-muted">(optional)</span></p>
+          <p className="label">Your photo</p>
           <PhotoUpload name="ownerPhoto" max={1} variant="logo" addLabel="Add photo" initial={split(val.ownerPhoto)} />
         </div>
         {text("ownerName", "Your name", { placeholder: "Maria Lopez" })}
         <div>
           <label htmlFor="ownerStory" className="label">
-            A few words about you <span className="font-normal text-muted">(optional)</span>
+            A few words about you
           </label>
           <textarea
             id="ownerStory"
@@ -131,24 +218,11 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
         </div>
       </Section>
 
-      <Section title="Location" intro="Helps people nearby find you. Your street address is only shown if you add one.">
-        {text("address", "Street address", {
-          placeholder: "123 Main St",
-          hint: "Only if customers can visit you, like a shop or studio. Leave blank for home-based businesses; we'll just show your town.",
-        })}
-        <div className="grid gap-4 sm:grid-cols-[2fr_1fr_1fr]">
-          {text("city", "City", { required: true, placeholder: "Springfield" })}
-          {text("state", "State", { required: true, placeholder: "OR" })}
-          {text("zip", "ZIP", { required: true, placeholder: "97477" })}
-        </div>
-        <label className="flex items-center gap-3 text-[15px]">
-          <input type="checkbox" name="onlineOnly" defaultChecked={val.onlineOnly === "on"} className="h-4 w-4 accent-brand" />
-          We&apos;re online only, with no physical location
-        </label>
-        <ErrorText msg={err.location} />
+      <Section title="Location" intro="Helps people nearby find you. Add your city and state, or just a ZIP code.">
+        <LocationFields val={val} err={err} text={text} />
       </Section>
 
-      <Section title="Links" intro="Paste a full link, or just your @handle for social accounts.">
+      <Section title="Links" intro="Add any you have. Paste a full link, or just your @handle for social accounts.">
         {text("website", "Website", { placeholder: "sunnysidebakery.com" })}
         {text("etsy", "Etsy shop", { placeholder: "Shop name or link" })}
         <div className="grid gap-4 sm:grid-cols-3">
@@ -160,6 +234,7 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
           placeholder: "https://g.page/r/…",
           hint: "Lets customers leave you a Google review. Find it in your Google Business Profile under \"Ask for reviews.\"",
         })}
+        <MoreLinks val={val} err={err} />
       </Section>
 
       <Section
@@ -167,7 +242,7 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
         intro="Already raising money on Wefunder, Kiva, GoFundMe or similar? Link it here. Sweet Main never handles money or takes a cut."
       >
         <div>
-          <p className="label">Fundraising links <span className="font-normal text-muted">(optional)</span></p>
+          <p className="label">Fundraising links</p>
           <div className="space-y-2">
             {Array.from({ length: SUPPORT_ROWS }, (_, i) => (
               <div key={i}>
