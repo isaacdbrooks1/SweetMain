@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { createBusiness, type FormState } from "./actions";
+import { createBusiness } from "./actions";
+import type { FormState } from "@/lib/listingForm";
 import { CATEGORY_NAMES, MAX_PHOTOS, SUPPORT_PLATFORMS, SUPPORT_ROWS } from "@/lib/categories";
 import PhotoUpload from "@/components/PhotoUpload";
 
@@ -22,8 +23,15 @@ function ErrorText({ msg }: { msg?: string }) {
   return msg ? <p className="mt-1.5 text-[15px] font-medium text-danger">{msg}</p> : null;
 }
 
-export default function AddBusinessForm() {
-  const [state, action, pending] = useActionState<FormState, FormData>(createBusiness, {});
+// Used to publish a new listing, and (with action + initial) for an owner editing theirs.
+export default function AddBusinessForm({ action: save = createBusiness, initial, hidden = {}, submitLabel = "Publish listing", footnote = "Your listing goes live as soon as you publish." }: {
+  action?: (prev: FormState, formData: FormData) => Promise<FormState>;
+  initial?: Record<string, string>;
+  hidden?: Record<string, string>;
+  submitLabel?: string;
+  footnote?: string;
+} = {}) {
+  const [state, action, pending] = useActionState<FormState, FormData>(save, { values: initial });
   const val = state.values ?? {};
   const err = state.errors ?? {};
   const errorCount = Object.keys(err).length;
@@ -51,9 +59,10 @@ export default function AddBusinessForm() {
   return (
     // The key makes the form refill with what the person typed after an error.
     <form action={action} key={JSON.stringify(val)} noValidate>
+      {Object.entries(hidden).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
       {errorCount > 0 && (
         <div role="alert" className="mb-8 rounded-md border border-danger/30 bg-danger/5 p-4 text-[15px] font-bold text-danger">
-          Please fix {errorCount === 1 ? "the item" : `the ${errorCount} items`} marked below.
+          {err.form ?? (errorCount === 1 ? "Please fix the item marked below." : `Please fix the ${errorCount} items marked below.`)}
         </div>
       )}
 
@@ -201,9 +210,9 @@ export default function AddBusinessForm() {
       </Section>
 
       <div className="flex flex-col-reverse items-start gap-4 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-end">
-        <p className="text-[15px] text-muted">Your listing goes live as soon as you publish.</p>
+        <p className="text-[15px] text-muted">{footnote}</p>
         <button type="submit" disabled={pending} className="btn-primary px-8 py-3">
-          {pending ? "Publishing…" : "Publish listing"}
+          {pending ? "Saving…" : submitLabel}
         </button>
       </div>
     </form>

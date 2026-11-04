@@ -199,3 +199,68 @@ export async function searchBusinesses(filters: {
 
   return { results: list, place, placeNotFound: !!nearText && !place };
 }
+
+// For the owner's edit page: the listing as form values, including the private email.
+export async function getListingForEdit(id: string): Promise<Record<string, string> | null> {
+  const { data, error } = await supabase
+    .from("businesses")
+    .select(`${PUBLIC_COLUMNS}, owner_email`)
+    .eq("id", id)
+    .maybeSingle();
+  if (error || !data) return null;
+  const b = fromRow(data as Row);
+  const values: Record<string, string> = {
+    name: b.name,
+    category: b.category,
+    tagline: b.tagline,
+    description: b.description,
+    city: b.city,
+    state: b.state,
+    zip: b.zip,
+    address: b.address ?? "",
+    onlineOnly: b.onlineOnly ? "on" : "",
+    logo: b.logo ?? "",
+    photos: b.photos.join(","),
+    investorContact: b.investorContact ? "on" : "",
+    ownerName: b.ownerName ?? "",
+    ownerStory: b.ownerStory,
+    ownerPhoto: b.ownerPhoto ?? "",
+    ownerEmail: (data as { owner_email: string }).owner_email,
+  };
+  for (const [k, url] of Object.entries(b.links)) if (url) values[k] = url;
+  b.supportLinks.forEach((s, i) => {
+    values[`support${i}_platform`] = s.platform;
+    values[`support${i}_url`] = s.url;
+  });
+  return values;
+}
+
+export async function updateBusiness(id: string, input: NewBusiness): Promise<void> {
+  const point = input.onlineOnly ? null : locate(input);
+  const { error } = await supabase
+    .from("businesses")
+    .update({
+      name: input.name,
+      category: input.category,
+      tagline: input.tagline,
+      description: input.description,
+      city: input.city,
+      state: input.state,
+      zip: input.zip,
+      address: input.address ?? null,
+      online_only: input.onlineOnly,
+      lat: point?.lat ?? null,
+      lng: point?.lng ?? null,
+      logo: input.logo ?? null,
+      photos: input.photos,
+      links: input.links,
+      support_links: input.supportLinks,
+      investor_contact: input.investorContact,
+      owner_name: input.ownerName ?? null,
+      owner_story: input.ownerStory,
+      owner_photo: input.ownerPhoto ?? null,
+      owner_email: input.ownerEmail,
+    })
+    .eq("id", id);
+  if (error) throw new Error(`Couldn't save your changes: ${error.message}`);
+}

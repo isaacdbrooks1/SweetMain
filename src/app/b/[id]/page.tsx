@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowUpRight, CheckCircle2, ChevronRight, Flag, Globe, MapPin, MessageSquare, Navigation, ShoppingBag, Star } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, ChevronRight, Flag, Globe, MapPin, MessageSquare, Navigation, Pencil, ShoppingBag, Star } from "lucide-react";
 import { getBusiness } from "@/lib/businesses";
 import { imageUrl } from "@/lib/images";
 import { PhotoPlaceholder, placeLabel } from "@/components/BusinessCard";
 import ShareButtons from "@/components/ShareButtons";
+import InvestorMessage from "@/components/InvestorMessage";
+import { emailConfigured } from "@/lib/email";
 import { hasTown, townSlug } from "@/lib/towns";
 
 type Props = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ new?: string }>;
+  searchParams: Promise<{ new?: string; updated?: string }>;
 };
 
 const LINKS: { key: "website" | "etsy" | "instagram" | "facebook" | "tiktok" | "google"; label: string }[] = [
@@ -40,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BusinessPage({ params, searchParams }: Props) {
-  const [{ id }, { new: isNew }] = await Promise.all([params, searchParams]);
+  const [{ id }, { new: isNew, updated }] = await Promise.all([params, searchParams]);
   const b = await getBusiness(id);
   if (!b) notFound();
 
@@ -55,8 +57,18 @@ export default async function BusinessPage({ params, searchParams }: Props) {
           <CheckCircle2 className="mt-0.5 shrink-0 text-brand" size={20} />
           <div>
             <p className="font-bold">Your listing is live.</p>
-            <p className="text-[15px] text-muted">Share this page&apos;s link with customers so they can find and support you.</p>
+            <p className="text-[15px] text-muted">
+              {emailConfigured()
+                ? "We emailed you a private link to edit it later. Share this page with customers so they can find and support you."
+                : "Share this page with customers so they can find and support you."}
+            </p>
           </div>
+        </div>
+      )}
+      {updated && (
+        <div role="status" className="mb-6 flex items-center gap-3 rounded-md border border-brand/30 bg-brand-soft p-4">
+          <CheckCircle2 className="shrink-0 text-brand" size={20} />
+          <p className="font-bold">Your changes are saved.</p>
         </div>
       )}
 
@@ -216,10 +228,13 @@ export default async function BusinessPage({ params, searchParams }: Props) {
                 <div className="mt-4 border-t border-line pt-4">
                   <p className="font-bold">Thinking about a bigger investment?</p>
                   <p className="mt-1 text-[15px] text-muted">The owner is open to hearing from investors.</p>
-                  {/* Gets wired to email in the "Support & invest" phase. */}
-                  <button disabled className="btn-secondary mt-3 w-full cursor-not-allowed opacity-60">
-                    <MessageSquare size={18} /> Message the owner (coming soon)
-                  </button>
+                  {emailConfigured() ? (
+                    <InvestorMessage businessId={b.id} />
+                  ) : (
+                    <button disabled className="btn-secondary mt-3 w-full cursor-not-allowed opacity-60">
+                      <MessageSquare size={18} /> Message the owner (coming soon)
+                    </button>
+                  )}
                 </div>
               )}
               <p className="mt-4 text-[13px] leading-relaxed text-muted">
@@ -231,9 +246,12 @@ export default async function BusinessPage({ params, searchParams }: Props) {
         </aside>
       </div>
 
-      <p className="mt-12 border-t border-line pt-6">
+      <p className="mt-12 flex flex-wrap gap-x-8 gap-y-2 border-t border-line pt-6">
         <Link href={`/b/${b.id}/report`} className="inline-flex items-center gap-2 text-[15px] text-muted hover:text-ink hover:underline">
           <Flag size={16} /> Report this listing
+        </Link>
+        <Link href="/edit-link" className="inline-flex items-center gap-2 text-[15px] text-muted hover:text-ink hover:underline">
+          <Pencil size={16} /> Own this business? Edit your listing
         </Link>
       </p>
     </main>
