@@ -20,6 +20,15 @@ export function locate({ zip, city, state }: { zip?: string; city?: string; stat
   return null;
 }
 
+// The town a ZIP code belongs to, e.g. "97477" -> Springfield, OR. Null if unknown.
+export function townForZip(zip: string): { city: string; state: string } | null {
+  const info = zipcodes.lookup(zip.slice(0, 5));
+  if (!info) return null;
+  // The data stores names in capitals for some ZIPs; show them as "Springfield".
+  const city = info.city.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
+  return { city, state: info.state };
+}
+
 // Understands "97477", "Eugene, OR" and "Eugene OR". Returns null if it can't tell where.
 export function parseNear(text: string): Place | null {
   const t = text.trim();

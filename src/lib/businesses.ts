@@ -178,7 +178,7 @@ export async function searchBusinesses(filters: {
     .filter(
       (b) =>
         !q ||
-        [b.name, b.tagline, b.description, b.category].some((t) => t.toLowerCase().includes(q)),
+        [b.name, b.tagline, b.description, b.category, b.city, `${b.city}, ${b.state}`].some((t) => t.toLowerCase().includes(q)),
     );
 
   if (place) {
@@ -265,4 +265,15 @@ export async function updateBusiness(id: string, input: NewBusiness): Promise<vo
     })
     .eq("id", id);
   if (error) throw new Error(`Couldn't save your changes: ${error.message}`);
+}
+
+// How many listings this email created in the last 24 hours (to slow down spam).
+export async function listingsTodayFor(email: string): Promise<number> {
+  const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+  const { count } = await supabase
+    .from("businesses")
+    .select("id", { count: "exact", head: true })
+    .ilike("owner_email", email.replace(/[%_]/g, ""))
+    .gte("created_at", since);
+  return count ?? 0;
 }

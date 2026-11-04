@@ -25,6 +25,8 @@ export default function SiteFooter() {
           <p className="font-bold">For owners</p>
           <ul className="mt-3 space-y-2 text-white/85">
             <li><Link href="/add" className="hover:text-white hover:underline">List your business</Link></li>
+            <li><Link href="/edit-link" className="hover:text-white hover:underline">Edit your listing</Link></li>
+            <li><Link href="/about" className="hover:text-white hover:underline">About, terms and privacy</Link></li>
           </ul>
         </div>
       </div>

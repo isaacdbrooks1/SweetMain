@@ -34,3 +34,14 @@ export async function imageExists(name: string): Promise<boolean> {
   const res = await fetch(imageUrl(name), { method: "HEAD", cache: "no-store" }).catch(() => null);
   return !!res?.ok;
 }
+
+// A simple brake on abuse: more than 60 photos in 10 minutes across the whole site
+// is far beyond normal use, so new uploads wait a bit.
+export async function uploadsRecentlyBusy(): Promise<boolean> {
+  const { data } = await supabase.storage
+    .from(PHOTO_BUCKET)
+    .list("", { limit: 61, sortBy: { column: "created_at", order: "desc" } });
+  if (!data || data.length <= 60) return false;
+  const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
+  return data.filter((f) => f.created_at && Date.parse(f.created_at) > tenMinutesAgo).length > 60;
+}

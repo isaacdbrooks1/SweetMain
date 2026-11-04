@@ -3,6 +3,7 @@ import "server-only";
 import type { NewBusiness, SupportLink } from "@/lib/businesses";
 import { CATEGORY_NAMES, MAX_PHOTOS, SUPPORT_PLATFORMS, SUPPORT_ROWS } from "@/lib/categories";
 import { imageExists } from "@/lib/uploads";
+import { locate, townForZip } from "@/lib/geo";
 
 export type FormState = {
   errors?: Record<string, string>;
@@ -47,8 +48,11 @@ export async function parseListing(
   }
   const v = (k: string) => values[k] ?? "";
   const errors: Record<string, string> = {};
+  // Bots fill in every field; people never see this one.
+  if (v("company")) errors.form = "Something went wrong. Please try again.";
 
   if (!v("name")) errors.name = "Please enter your business name.";
+  else if (v("name").length > 80) errors.name = "Keep this under 80 characters.";
   if (!CATEGORY_NAMES.includes(v("category"))) errors.category = "Please pick a category.";
   if (!v("tagline")) errors.tagline = "Add a short line about what you do.";
   else if (v("tagline").length > 120) errors.tagline = "Keep this under 120 characters.";
@@ -60,6 +64,20 @@ export async function parseListing(
   }
   if (v("zip") && !/^\d{5}(-\d{4})?$/.test(v("zip"))) errors.zip = "ZIP should look like 12345.";
   if (v("state") && !/^[A-Za-z]{2}$/.test(v("state"))) errors.state = "Use the 2-letter code, like OR.";
+  if (v("city").length > 60) errors.city = "Keep this under 60 characters.";
+
+  // Make sure the location can actually be found, or the listing would never show up
+  // in "near me" searches. A ZIP on its own also fills in the town.
+  let city = v("city");
+  let state = v("state").toUpperCase();
+  if (!onlineOnly && !errors.zip && !errors.state && !errors.location) {
+    const zipTown = v("zip") ? townForZip(v("zip")) : null;
+    if (v("zip") && !zipTown) errors.zip = "We couldn't find that ZIP code. Please check it.";
+    else if (zipTown && !city && !state) ({ city, state } = zipTown);
+    else if (!v("zip") && !locate({ city, state })) {
+      errors.location = "We couldn't find that town. Check the spelling, or add your ZIP code.";
+    }
+  }
   if (!onlineOnly && v("address")) {
     if (v("address").length > 120) errors.address = "Keep this under 120 characters.";
     else if (!v("city") || !v("state")) errors.location = "Please add your city and state along with the street address.";
@@ -129,8 +147,8 @@ export async function parseListing(
     category: v("category"),
     tagline: v("tagline"),
     description: v("description"),
-    city: onlineOnly ? "" : v("city"),
-    state: onlineOnly ? "" : v("state").toUpperCase(),
+    city: onlineOnly ? "" : city,
+    state: onlineOnly ? "" : state,
     zip: onlineOnly ? "" : v("zip"),
     address: onlineOnly ? undefined : v("address") || undefined,
     onlineOnly,

@@ -56,7 +56,20 @@ function directionsUrl(b: { name: string; address?: string; city: string; state:
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const b = await getBusiness((await params).id);
-  return { title: b ? `${b.name} · Sweet Main` : "Not found · Sweet Main", description: b?.tagline };
+  if (!b) return { title: "Not found · Sweet Main" };
+  const where = b.onlineOnly ? "online" : `in ${placeLabel(b)}`;
+  return {
+    title: `${b.name} · Sweet Main`,
+    description: b.tagline,
+    // Shared links show the business's cover photo when it has one.
+    openGraph: {
+      title: `${b.name}: ${b.category} ${where}`,
+      description: b.tagline,
+      url: `/b/${b.id}`,
+      // No photo yet: fall back to the general Sweet Main card.
+      images: [{ url: b.photos[0] ? imageUrl(b.photos[0]) : "/opengraph-image" }],
+    },
+  };
 }
 
 export default async function BusinessPage({ params, searchParams }: Props) {

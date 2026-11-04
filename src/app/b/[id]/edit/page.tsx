@@ -4,6 +4,7 @@ import { getListingForEdit } from "@/lib/businesses";
 import { tokenMatches } from "@/lib/editLinks";
 import AddBusinessForm from "@/app/add/AddBusinessForm";
 import { saveListing } from "./actions";
+import DeleteOwnListing from "./DeleteOwnListing";
 
 export const metadata: Metadata = { title: "Edit your listing · Sweet Main", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -41,6 +42,7 @@ export default async function EditPage({ params, searchParams }: Props) {
         submitLabel="Save changes"
         footnote="Your changes go live as soon as you save."
       />
+      <DeleteOwnListing id={id} editKey={key} name={values.name} />
     </main>
   );
 }

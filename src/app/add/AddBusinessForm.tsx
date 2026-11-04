@@ -144,6 +144,10 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
     // The key makes the form refill with what the person typed after an error.
     <form action={action} key={JSON.stringify(val)} noValidate>
       {Object.entries(hidden).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
+      {/* Hidden from people; catches bots that fill in every field. */}
+      <div aria-hidden className="absolute left-[-9999px]">
+        <label>Company <input name="company" tabIndex={-1} autoComplete="off" /></label>
+      </div>
       <p className="mb-6 text-[15px] text-muted">
         Fields marked <span className="font-bold text-danger">*</span> are required. Everything else is optional.
       </p>

@@ -10,8 +10,18 @@ const overpass = Overpass({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.sweetmain.com"),
   title: "Sweet Main",
   description: "Find and support small businesses near you.",
+  // How shared links look on Facebook, in texts, etc.
+  openGraph: {
+    siteName: "Sweet Main",
+    type: "website",
+    locale: "en_US",
+    title: "Sweet Main",
+    description: "Find and support small businesses near you.",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({

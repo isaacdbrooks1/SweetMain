@@ -8,11 +8,15 @@ import Streetscape from "@/components/Streetscape";
 // Always read fresh listings instead of caching the page at build time.
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ removed?: string }> }) {
+  const { removed } = await searchParams;
   const newest = (await listBusinesses()).slice(0, 8);
 
   return (
     <main>
+      {removed && (
+        <p role="status" className="bg-brand-soft px-4 py-3 text-center font-bold text-brand">Your listing has been deleted.</p>
+      )}
       {/* The street first, then the headline and search sitting on the sidewalk below it. */}
       <section>
         <Streetscape className="pt-8 sm:pt-10" />
