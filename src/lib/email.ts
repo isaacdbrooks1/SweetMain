@@ -27,7 +27,8 @@ export async function sendEmail(msg: {
       subject: msg.subject,
       text: msg.text,
       html: msg.html,
-      ...(msg.replyTo ? { reply_to: msg.replyTo } : {}),
+      // Replies reach the hello@ inbox unless a message sets its own Reply-To.
+      reply_to: msg.replyTo ?? "hello@sweetmain.com",
     }),
   });
   if (!res.ok) throw new Error(`Resend refused the email (${res.status}): ${await res.text()}`);
@@ -60,4 +61,23 @@ export async function siteUrl(): Promise<string> {
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "www.sweetmain.com";
   const proto = host.startsWith("localhost") ? "http" : "https";
   return `${proto}://${host}`;
+}
+
+// Where Sweet Main's own mail goes. Cloudflare Email Routing forwards it to the owner's inbox.
+export const CONTACT_EMAIL = "hello@sweetmain.com";
+
+// A short heads-up to Sweet Main (new listing, new report). Never throws: an alert
+// failing must not break the visitor's action.
+export async function notifyAdmin(subject: string, lines: string[], link: { label: string; url: string }) {
+  if (!emailConfigured()) return;
+  try {
+    await sendEmail({
+      to: CONTACT_EMAIL,
+      subject: `[Sweet Main] ${subject}`,
+      text: `${lines.join("\n\n")}\n\n${link.label}: ${link.url}`,
+      html: emailHtml(lines, link),
+    });
+  } catch (e) {
+    console.error("admin alert failed", e);
+  }
 }

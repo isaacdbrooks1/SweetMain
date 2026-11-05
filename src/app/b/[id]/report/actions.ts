@@ -2,6 +2,7 @@
 
 import { getBusiness } from "@/lib/businesses";
 import { addReport, REPORT_REASONS } from "@/lib/moderation";
+import { notifyAdmin, siteUrl } from "@/lib/email";
 
 export type ReportState = { sent?: boolean; error?: string };
 
@@ -15,8 +16,18 @@ export async function sendReport(_prev: ReportState, formData: FormData): Promis
 
   if (!REPORT_REASONS.includes(reason)) return { error: "Please choose a reason." };
   if (details.length > 1000) return { error: "Please keep the details under 1,000 characters." };
-  if (!(await getBusiness(id))) return { error: "That listing no longer exists." };
+  const b = await getBusiness(id);
+  if (!b) return { error: "That listing no longer exists." };
 
   await addReport(id, reason, details);
+  await notifyAdmin(
+    `Report: ${b.name}`,
+    [
+      `Someone reported ${b.name}: ${reason}.`,
+      ...(details ? [details] : []),
+      "Review it on the admin page, where you can hide the listing or dismiss the report.",
+    ],
+    { label: "Open the admin page", url: `${await siteUrl()}/admin` },
+  );
   return { sent: true };
 }

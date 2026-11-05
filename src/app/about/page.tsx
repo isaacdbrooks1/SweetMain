@@ -32,6 +32,7 @@ export default function AboutPage() {
         <a href="#investing" className="hover:underline">Investing</a>
         <a href="#privacy" className="hover:underline">Privacy</a>
         <a href="#remove" className="hover:underline">Changing or removing a listing</a>
+        <a href="#contact" className="hover:underline">Contact</a>
       </nav>
 
       <Section id="terms" title="Terms">
@@ -101,6 +102,13 @@ export default function AboutPage() {
         <p>
           See something wrong on someone else&apos;s listing? Use <strong>Report this listing</strong>{" "}
           at the bottom of their page.
+        </p>
+      </Section>
+
+      <Section id="contact" title="Contact">
+        <p>
+          Questions, ideas, or something we should fix? Email{" "}
+          <a href="mailto:hello@sweetmain.com" className="font-bold text-brand hover:underline">hello@sweetmain.com</a>.
         </p>
       </Section>
     </main>

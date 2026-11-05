@@ -27,6 +27,7 @@ export default function SiteFooter() {
             <li><Link href="/add" className="hover:text-white hover:underline">List your business</Link></li>
             <li><Link href="/edit-link" className="hover:text-white hover:underline">Edit your listing</Link></li>
             <li><Link href="/about" className="hover:text-white hover:underline">About, terms and privacy</Link></li>
+            <li><a href="mailto:hello@sweetmain.com" className="hover:text-white hover:underline">hello@sweetmain.com</a></li>
           </ul>
         </div>
       </div>
