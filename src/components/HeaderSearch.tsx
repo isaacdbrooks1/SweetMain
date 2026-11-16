@@ -9,7 +9,7 @@ export default function HeaderSearch() {
   const path = usePathname();
   if (path === "/" || path === "/search") return null;
   return (
-    <form action="/search" className="relative hidden w-full max-w-sm md:block">
+    <form action="/search" className="relative hidden w-full max-w-[260px] lg:block">
       <Search size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
       <input
         name="q"
