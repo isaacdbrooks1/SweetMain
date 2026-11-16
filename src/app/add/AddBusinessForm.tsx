@@ -255,7 +255,7 @@ export default function AddBusinessForm({ action: save = createBusiness, initial
                     name={`support${i}_platform`}
                     defaultValue={val[`support${i}_platform`] ?? SUPPORT_PLATFORMS[0]}
                     aria-label={`Fundraising link ${i + 1} site`}
-                    className="field sm:w-40"
+                    className="field sm:w-52"
                   >
                     {SUPPORT_PLATFORMS.map((p) => <option key={p}>{p}</option>)}
                   </select>

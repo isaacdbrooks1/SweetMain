@@ -55,7 +55,7 @@ export default function InvestorMessage({ businessId }: { businessId: string }) 
         <textarea id="inv-message" name="message" rows={4} required maxLength={1500} className="field" placeholder="A little about you and what you have in mind." />
       </div>
       {state.error && <p className="text-[15px] font-bold text-danger">{state.error}</p>}
-      <p className="text-[13px] text-muted">Your message is emailed to the owner, who can reply to you directly.</p>
+      <p className="text-[15px] text-muted">Your message is emailed to the owner, who can reply to you directly.</p>
       <button type="submit" disabled={pending} className="btn-primary w-full">
         {pending ? "Sending…" : "Send message"}
       </button>

@@ -60,21 +60,19 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ r
         <CategoryRow center hrefFor={(c) => (c ? `/search?category=${encodeURIComponent(c)}` : "/search")} />
       </div>
 
-      <section className="mx-auto max-w-6xl px-4 pt-10">
-        <div className="flex items-baseline justify-between gap-4">
-          <h2 className="text-[26px] font-extrabold tracking-[-0.01em]">New on Sweet Main</h2>
-          {newest.length > 0 && (
-            <Link href="/search" className="font-bold text-brand hover:underline">
-              See all businesses
-            </Link>
-          )}
-        </div>
+      <section className="mx-auto max-w-6xl px-4 pt-12">
+        <h2 className="text-center text-[26px] font-extrabold tracking-[-0.01em] sm:text-[34px]">New on Sweet Main</h2>
         {newest.length > 0 ? (
-          <div className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-            {newest.map((b) => <BusinessCard key={b.id} business={b} />)}
-          </div>
+          <>
+            <div className="card-grid mt-8">
+              {newest.map((b) => <BusinessCard key={b.id} business={b} />)}
+            </div>
+            <p className="mt-10 text-center">
+              <Link href="/search" className="btn-secondary">See all businesses</Link>
+            </p>
+          </>
         ) : (
-          <p className="mt-6 text-muted">
+          <p className="mt-3 text-center text-muted">
             No businesses listed yet.{" "}
             <Link href="/add" className="font-bold text-ink underline">List the first one.</Link>
           </p>

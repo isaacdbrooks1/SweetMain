@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 const when = (iso: string) =>
   new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
-const smallBtn = "rounded-md px-2.5 py-1.5 text-[14px] font-bold hover:bg-subtle";
+const smallBtn = "rounded-md px-2.5 py-1.5 text-[15px] font-bold hover:bg-subtle";
 
 export default async function AdminPage() {
   if (!adminConfigured()) {
@@ -66,7 +66,7 @@ export default async function AdminPage() {
                     ) : (
                       r.businessName
                     )}
-                    {r.businessStatus === "hidden" && <span className="ml-2 text-[14px] text-muted">(hidden)</span>}
+                    {r.businessStatus === "hidden" && <span className="ml-2 text-[15px] text-muted">(hidden)</span>}
                   </p>
                   <p className="text-[15px]"><span className="font-bold text-danger">{r.reason}</span> on {when(r.createdAt)}</p>
                   {r.details && <p className="mt-1 whitespace-pre-line text-[15px] text-muted">{r.details}</p>}
@@ -75,7 +75,7 @@ export default async function AdminPage() {
                   {r.businessStatus === "live" && (
                     <form action={hideListing}>
                       <input type="hidden" name="id" value={r.businessId} />
-                      <button type="submit" className="btn-primary px-3 py-1.5 text-[14px]">Hide listing</button>
+                      <button type="submit" className="btn-primary px-3 py-1.5 text-[15px]">Hide listing</button>
                     </form>
                   )}
                   <form action={dismiss}>
@@ -117,7 +117,7 @@ export default async function AdminPage() {
                     ) : (
                       <span className="font-bold">{b.name}</span>
                     )}
-                    <span className="block text-[14px] text-muted">
+                    <span className="block text-[15px] text-muted">
                       {b.category}{b.city ? ` in ${b.city}, ${b.state}` : ", online"}
                     </span>
                   </td>
@@ -126,7 +126,7 @@ export default async function AdminPage() {
                   <td className="py-3 pr-4">
                     {b.status === "live" ? "Live" : "Hidden"}
                     {b.openReports > 0 && (
-                      <span className="ml-2 rounded-md bg-gilt px-1.5 py-0.5 text-[13px] font-bold text-ink">
+                      <span className="ml-2 rounded-md bg-gilt px-1.5 py-0.5 text-[15px] font-bold text-ink">
                         {b.openReports} report{b.openReports > 1 ? "s" : ""}
                       </span>
                     )}

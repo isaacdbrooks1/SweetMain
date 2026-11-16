@@ -11,9 +11,9 @@ export default async function TownsPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 pt-10">
-      <h1 className="text-[34px] font-extrabold leading-tight tracking-[-0.01em]">Towns on Sweet Main</h1>
+      <h1 className="text-center text-[34px] font-extrabold leading-tight tracking-[-0.01em] sm:text-[44px]">Towns on Sweet Main</h1>
       {towns.length === 0 ? (
-        <p className="mt-3 text-muted">
+        <p className="mt-3 text-center text-muted">
           No towns yet.{" "}
           <Link href="/add" className="font-bold text-ink underline">List the first business.</Link>
         </p>

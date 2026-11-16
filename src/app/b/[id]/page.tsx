@@ -112,18 +112,18 @@ export default async function BusinessPage({ params, searchParams }: Props) {
       )}
 
       <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-1.5 text-[15px] text-muted">
-        <Link href="/search" className="hover:text-ink hover:underline">Browse</Link>
-        <ChevronRight size={14} />
-        <Link href={`/search?category=${encodeURIComponent(b.category)}`} className="hover:text-ink hover:underline">
+        <Link href="/search" className="shrink-0 hover:text-ink hover:underline">Browse</Link>
+        <ChevronRight size={14} className="shrink-0" />
+        <Link href={`/search?category=${encodeURIComponent(b.category)}`} className="shrink-0 whitespace-nowrap hover:text-ink hover:underline">
           {b.category}
         </Link>
-        <ChevronRight size={14} />
+        <ChevronRight size={14} className="shrink-0" />
         <span className="truncate text-ink">{b.name}</span>
       </nav>
 
       {/* Photos: one big cover with up to three smaller ones beside it. */}
       <div
-        className={`grid h-64 gap-2 overflow-hidden rounded-[10px] sm:h-96 ${
+        className={`grid gap-2 overflow-hidden rounded-[10px] ${cover ? "h-64 sm:h-96" : "h-40 sm:h-56"} ${
           rest.length > 0 ? "sm:grid-cols-[2fr_1fr]" : ""
         }`}
       >
@@ -185,7 +185,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
               )}
               <div>
                 <h2 className="text-xl font-bold">{b.ownerName ? `Meet ${b.ownerName}` : "Meet the owner"}</h2>
-                {b.ownerStory && <p className="mt-2 whitespace-pre-line leading-relaxed text-ink/90">{b.ownerStory}</p>}
+                {b.ownerStory && <p className="mt-2 whitespace-pre-line leading-relaxed">{b.ownerStory}</p>}
               </div>
             </section>
           )}
@@ -193,7 +193,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
           {b.description && (
             <section className="mt-8 border-t border-line pt-8">
               <h2 className="text-xl font-bold">About</h2>
-              <p className="mt-3 whitespace-pre-line leading-relaxed text-ink/90">{b.description}</p>
+              <p className="mt-3 whitespace-pre-line leading-relaxed">{b.description}</p>
             </section>
           )}
 
@@ -274,7 +274,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
                   )}
                 </div>
               )}
-              <p className="mt-4 text-[13px] leading-relaxed text-muted">
+              <p className="mt-4 text-[15px] leading-relaxed text-muted">
                 Sweet Main doesn&apos;t review or take part in investments. Do your own research
                 before putting money in.
               </p>

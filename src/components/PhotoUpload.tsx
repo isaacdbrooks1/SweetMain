@@ -75,7 +75,7 @@ export default function PhotoUpload({ name, max, initial = [], variant, addLabel
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={imageUrl(f)} alt="" className="h-full w-full object-cover" />
             {variant === "photos" && i === 0 && (
-              <span className="absolute left-2 top-2 rounded bg-bg/90 px-1.5 py-0.5 text-[13px] font-bold">
+              <span className="absolute left-2 top-2 rounded bg-bg/90 px-1.5 py-0.5 text-[15px] font-bold">
                 Cover
               </span>
             )}

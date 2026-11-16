@@ -6,9 +6,9 @@ export const metadata: Metadata = { title: "List your business · Sweet Main" };
 export default function AddPage() {
   return (
     <main className="mx-auto max-w-5xl px-4 pt-10">
-      <header className="pb-8">
+      <header className="pb-8 text-center">
         <h1 className="text-[34px] font-extrabold leading-tight tracking-[-0.01em] sm:text-[44px]">List your business</h1>
-        <p className="mt-2 max-w-xl text-muted">
+        <p className="mx-auto mt-2 max-w-xl text-muted">
           Free for independent businesses, for good: no ads, no sales calls.
         </p>
       </header>

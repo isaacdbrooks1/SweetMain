@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${overpass.variable} flex min-h-screen flex-col font-sans antialiased`}
+        className={`${overpass.variable} flex min-h-screen flex-col font-sans`}
       >
         <SiteHeader />
         <div className="flex-1">{children}</div>

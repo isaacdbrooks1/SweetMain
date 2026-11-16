@@ -32,7 +32,7 @@ export default function LinkForm() {
         <input id="email" name="email" type="email" autoComplete="email" required className="field" />
       </div>
       {state.error && <p className="font-bold text-danger">{state.error}</p>}
-      <button type="submit" disabled={pending} className="btn-primary">
+      <button type="submit" disabled={pending} className="btn-primary w-full">
         {pending ? "Sending…" : "Email me an edit link"}
       </button>
     </form>

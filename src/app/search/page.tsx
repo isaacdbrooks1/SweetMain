@@ -32,7 +32,7 @@ export default async function SearchPage({ searchParams }: Props) {
 
   return (
     <main className="mx-auto max-w-6xl px-4 pt-6">
-      <form action="/search" className="mb-6 flex flex-col gap-2 sm:flex-row">
+      <form action="/search" className="mx-auto mb-6 flex max-w-4xl flex-col gap-2 sm:flex-row">
         {category && <input type="hidden" name="category" value={category} />}
         <label className="flex flex-1 items-center gap-2 rounded-md border border-line px-3 focus-within:border-ink">
           <Search size={18} className="text-muted" />
@@ -48,9 +48,9 @@ export default async function SearchPage({ searchParams }: Props) {
         <button type="submit" className="btn-primary">Search</button>
       </form>
 
-      <CategoryRow active={category} hrefFor={(c) => hrefWith({ category: c })} />
+      <CategoryRow center active={category} hrefFor={(c) => hrefWith({ category: c })} />
 
-      <div className="mt-6 flex flex-wrap items-center gap-2 text-[15px]">
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[15px]">
         <span className="mr-1 font-bold">
           {results.length} {results.length === 1 ? "business" : "businesses"}
         </span>
@@ -69,17 +69,17 @@ export default async function SearchPage({ searchParams }: Props) {
         )}
       </div>
       {placeNotFound && (
-        <p className="mt-2 text-[15px] text-muted">
+        <p className="mt-2 text-center text-[15px] text-muted">
           We couldn&apos;t find &ldquo;{near}&rdquo; on the map. Try a ZIP code or &ldquo;City, ST&rdquo;.
         </p>
       )}
 
       {results.length > 0 ? (
-        <div className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="card-grid mt-6">
           {results.map((b) => <BusinessCard key={b.id} business={b} />)}
         </div>
       ) : (
-        <div className="mt-6 rounded-md border border-line px-6 py-12 text-center">
+        <div className="mx-auto mt-6 max-w-2xl rounded-md border border-line px-6 py-12 text-center">
           <p className="font-bold">No businesses match that search yet.</p>
           <p className="mt-1 text-muted">
             Try a wider distance, fewer words, or{" "}

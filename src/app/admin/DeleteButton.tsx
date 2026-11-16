@@ -12,7 +12,7 @@ export default function DeleteButton({ id, name }: { id: string; name: string })
       }}
     >
       <input type="hidden" name="id" value={id} />
-      <button type="submit" className="rounded-md px-2.5 py-1.5 text-[14px] font-bold text-danger hover:bg-danger/10">
+      <button type="submit" className="rounded-md px-2.5 py-1.5 text-[15px] font-bold text-danger hover:bg-danger/10">
         Delete
       </button>
     </form>

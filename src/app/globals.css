@@ -6,7 +6,7 @@
   --bg: #ffffff;
   --subtle: #f3f4f1;
   --ink: #1e2420;
-  --muted: #5f6b64;
+  --muted: #4c5750;
   --line: #e2e5e0;
   --brand: #0b6b3a;
   --brand-hover: #08552e;
@@ -39,6 +39,9 @@ body {
   line-height: 1.55;
   /* A very long word (or a pasted link) wraps instead of pushing past the screen edge. */
   overflow-wrap: anywhere;
+  /* Keep letters sturdy and sharp: no thinned-out smoothing. */
+  -webkit-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
 }
 
 :focus-visible {
@@ -48,7 +51,7 @@ body {
 
 @layer components {
   .field {
-    @apply w-full rounded-md border border-line bg-bg px-3 py-2.5 text-ink placeholder:text-muted/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20;
+    @apply w-full rounded-md border border-line bg-bg px-3 py-2.5 text-ink placeholder:text-[#7a857f] focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20;
   }
   .label {
     @apply mb-1.5 block text-[15px] font-bold;
@@ -61,6 +64,13 @@ body {
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-md border border-line bg-bg px-4 py-2.5 font-bold transition-colors hover:border-ink;
+  }
+  /* Business cards in rows of up to four. A short row sits in the middle. */
+  .card-grid {
+    @apply flex flex-wrap justify-center gap-x-6 gap-y-10;
+  }
+  .card-grid > * {
+    @apply w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)];
   }
   /* The logo: a green street-name sign with a white inner border. */
   .street-sign {

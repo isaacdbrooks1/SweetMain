@@ -18,16 +18,16 @@ function Section({ id, title, children }: { id: string; title: string; children:
 export default function AboutPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 pt-10">
-      <h1 className="text-[34px] font-extrabold leading-tight tracking-[-0.01em] sm:text-[44px]">About Sweet Main</h1>
-      <p className="mt-4 text-[19px] text-muted">
+      <h1 className="text-center text-[34px] font-extrabold leading-tight tracking-[-0.01em] sm:text-[44px]">About Sweet Main</h1>
+      <p className="mt-4 text-center text-[19px] text-muted">
         Sweet Main is a free directory that helps neighbors find and support independent local
         businesses: the bakeries, makers, salons and repair shops run by people who live near you.
       </p>
-      <p className="mt-3">
+      <p className="mt-3 text-center">
         Listing a business is free for good. We don&apos;t sell ads to listed businesses and we
         don&apos;t make sales calls.
       </p>
-      <nav className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[15px] font-bold text-brand">
+      <nav className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[15px] font-bold text-brand">
         <a href="#terms" className="hover:underline">Terms</a>
         <a href="#investing" className="hover:underline">Investing</a>
         <a href="#privacy" className="hover:underline">Privacy</a>

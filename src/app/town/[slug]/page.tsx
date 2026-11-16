@@ -27,19 +27,19 @@ export default async function TownPage({ params }: Props) {
 
   return (
     <main className="mx-auto max-w-6xl px-4 pt-10">
-      <h1 className="text-[34px] font-extrabold leading-tight tracking-[-0.01em] sm:text-[44px]">
+      <h1 className="text-center text-[34px] font-extrabold leading-tight tracking-[-0.01em] sm:text-[44px]">
         Small businesses in {city}, {state}
       </h1>
-      <p className="mt-2 text-muted">
+      <p className="mt-2 text-center text-muted">
         {list.length} {list.length === 1 ? "business" : "businesses"} run by people in and around {city}.{" "}
         <Link href="/add" className="font-bold text-brand hover:underline">List yours</Link>
       </p>
 
-      <div className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="card-grid mt-8">
         {list.map((b) => <BusinessCard key={b.id} business={b} />)}
       </div>
 
-      <p className="mt-12 text-[15px]">
+      <p className="mt-12 text-center text-[15px]">
         <Link href="/towns" className="font-bold text-brand hover:underline">See all towns</Link>
       </p>
     </main>

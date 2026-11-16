@@ -19,7 +19,7 @@ Everything else stays quiet: white page, dark ink text, green for actions.
 | Sign green dk | `#08552E` | Button hover                                     |
 | Gilt          | `#F2B233` | Small highlights only: "Raising funds" badges, awning stripes |
 | Ink           | `#1E2420` | Text, line drawings                              |
-| Muted         | `#5F6B64` | Secondary text                                   |
+| Muted         | `#4C5750` | Secondary text                                   |
 | Sidewalk      | `#F3F4F1` | Quiet surfaces, footer strip of the hero         |
 | Line          | `#E2E5E0` | Borders, dividers                                |
 

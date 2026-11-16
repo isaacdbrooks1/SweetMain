@@ -18,7 +18,7 @@ export function supportBadge(b: PublicBusiness): string | null {
 export function PhotoPlaceholder({ category }: { category: string }) {
   const Icon = categoryIcon(category);
   return (
-    <div className="grid h-full w-full place-items-center bg-subtle text-muted/70">
+    <div className="grid h-full w-full place-items-center bg-subtle text-muted">
       <Icon size={40} strokeWidth={1.25} />
     </div>
   );
@@ -45,7 +45,7 @@ export default function BusinessCard({ business: b }: { business: PublicBusiness
           <PhotoPlaceholder category={b.category} />
         )}
         {badge && (
-          <span className="absolute left-3 top-3 rounded-md bg-gilt px-2 pb-0.5 pt-1 text-[13px] font-bold text-ink">
+          <span className="absolute left-3 top-3 rounded-md bg-gilt px-2 pb-0.5 pt-1 text-[15px] font-bold text-ink">
             {badge}
           </span>
         )}
