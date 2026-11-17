@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Wordmark } from "./SiteHeader";
+import EmailLink from "./EmailLink";
 
 const LINKS = [
   { href: "/search", label: "All businesses" },
@@ -22,7 +23,7 @@ export default function SiteFooter() {
           {LINKS.map((l) => (
             <li key={l.href}><Link href={l.href} className="hover:underline">{l.label}</Link></li>
           ))}
-          <li><a href="mailto:hello@sweetmain.com" className="hover:underline">hello@sweetmain.com</a></li>
+          <li><EmailLink className="hover:underline" /></li>
         </ul>
       </div>
       <div className="border-t border-[#3d8961]">

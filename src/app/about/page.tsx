@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import EmailLink from "@/components/EmailLink";
 
 export const metadata: Metadata = {
   title: "About, terms and privacy · Sweet Main",
@@ -108,7 +109,7 @@ export default function AboutPage() {
       <Section id="contact" title="Contact">
         <p>
           Questions, ideas, or something we should fix? Email{" "}
-          <a href="mailto:hello@sweetmain.com" className="font-bold text-brand hover:underline">hello@sweetmain.com</a>.
+          <EmailLink className="font-bold text-brand hover:underline" />
         </p>
       </Section>
     </main>
